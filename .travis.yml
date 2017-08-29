@@ -15,24 +15,15 @@ install:
 script:
 - tox -e $TOX_ENV
 after_success: test $TOX_ENV = "python" && coveralls
-#deploy:
-#- provider: pypi
-#  user: Myoldmopar
-#  skip_cleanup: true
-#  skip_upload_docs: true
-#  password:
-#    secure: Ax9rCEWnrKPsfLVHe7t5jbS2uS1/aerbvi9GXEYoTWh3/B3a3G3eP2HKt8dITZomuPzXh7Wu6FRmcteJ9DUk6PHcqSKgLIf47JN6q/Afvz6PapTt2PNIAEp2rIyRBMlvbI915Z5v4JJ6td59xSIX9MNKIHBDgDQzZocACc0xjW4z11t8ZgUhBSFOxbEQHDSCVbI2bfjBXXS3ynljg+Z5CmkcGePaUYsDFrognaw8Jbl+Ru7bq6kRDnIhtW2sR4BXdo9Lf9Bp6qY4Wap2570xr9DbTuvebsci+Ouy9Dasu3rVzI6qEqOB9IVN8u9AL6P1q86tyQzH51jELoofd0sBlalL3mKaP5MXkghSpQQS18iboKWS5AMiznnFla5y0amUDscAhA1u6DbxcG6uvL6Cm5wEebLqoDdDfWDSo9rPSwdu3REJ0Y7+KsO11otjlqhoulWxkcM5WSRRaA7ZQrC308U0sEeK/FmUT+Xug4bfXJf6lWl1RvDVqls64v7Cqq1IGabIeBNwS8rCP7is2a2tQdo/A27+jfLUKv8eu6VfNWdSzi2rRaNky6+7hdZzUL28I6WCx4gTmyJxKlTUSnT6CBYMi77ePvnGrb73rLq8PMiX2LD6qPYmcwVc7mxz9Wk1yqsIUGZn6YRqXR2FI763ebeK1m4cNUMCZsApYydywJk=
-#  on:package
-#    tags: true
-#    condition: $TOX_ENV = package
-#  distributions: sdist bdist_wheel
-#  repo: Myoldmopar/ep-transition
-#- provider: releases
-#  skip_cleanup: true
-#  api_key:
-#    secure: k+mg38vs1FT7SgCf//Yl35G6S5oGl/Ujz/iTBrKx9pkUvqKb+pL8xq3p+xNBCVyCQZvvFfnMI0Se6ZyJt0PsjkZOJtSIfUgtvL8G6LqINyef7VFOyu92d15e2mEyshwtl6eumzHC74+XZJuQJLp9rvZfogy3oBypPO9rCcIzMZ2KaZ+2+SEEMKAnSjrpLBm6CRN8BneV8D+Wma8CpzgPHRS3G0Aa8rxtAUTi8A9GWUFMi+rWF8odAB4krDsylvTh5hBqlbtDN2Io2CzcEk8gGdEI5Q9kRaMfh+QtZJlU4FuIKtnDvM59MWxnsAzdxeCsoV076qqspSp6aHb7Y7XiOCL1LGuvWPP8k5ALEyZUob+IU/74dQItxoc40ftZvWSpuX//KdgHp1W0ZxDSwUj2+Pl7aIQn5eexlJaCAEE4LVEbWYa9GBRAuDmbiVAm/xPu+F1VIOlrI5OtINua5ATZMNOmpqiHlE7neqBcHjJDndRJ5u+hdMRD3ud1KGj0RqnZwYogl0vasq65oya8TsIgnJrySHVOC3jMpg6z8xIZpacpJmk1lsjs4d+ygEdEicazXe/VkTw9rfY+7LaR81ynjG1OaTerCxZGmIOU0l8CnzBbklfiAvpfJw7GXvkyyTngnmmxM96D1QQr4HHYWqw6kO18XEhwxYI5BvBCE7s/exs=
-#  file_glob: true
-#  file: dist/eptransition*
-#  on:
-#    tags: true
-#    condition: $TOX_ENV = binary
+deploy:
+- provider: pypi
+  user: Myoldmopar
+  skip_cleanup: true
+  skip_upload_docs: true
+  password:
+    secure: BX//K2RDk9/mny6tT898Bvu99plns8aQBU4GtQun3DtkIUnepZ9ETTaZMVRWlHHavbsH62bMSaf487WDh7ZQBatfyszrZYuH5PLNGos0Ba+0TpLoileX4dFV7Fv9CVDk5FFqTHo2xD5ef5LiN56nRiRzKjAPZng63LLT8TA6LiulDhtMv65q03PpIzWFkor1I5E/BEEwA4KiQM3xYqCrOJkHH63xOXgG/LBkcNMA5NgQb0+CYMbhmIhfrqT/aMMgdk2dBq1M+3xkf33PcU+smw41rJcb503yXuQQzUz6KkHHqniev96GKIZGEFEkP0Dhi7ba9ghFOMwavyppUEjgFBSIssKDpn8D6GLWknA4gnoHPz+Vq4s15o+eeqWunCb/k+HoSHN6CkqFY5l0/EB6q+PVfFBco3VvZ2sqcSu9IPuN248DaHIZm1NC8KtjGAl5fOfE/+wxJ5peNiODUGyxJNydxinxtgXSTJCiq/sdp04AjDM5EzLHp4gIpQU/uJTZW64ciAU6KdCHIcPIf2rR0a49G3byVibN58646XarqjkBR07ZHHncsWo7/czD55Cz+FZf77NVlUYfRFWnCNUs39xoBOZ/RXwPtEM/BIok4H0YEAqGgAtPwRGsDIdV+dAe6msbG3cymt+zO6orO1HcOW45z21GcAjM5n2Vjv4cUG4=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: Myoldmopar/py-idd-idf
+    condition: $TOX_ENV = package
