@@ -1,4 +1,4 @@
-language: generic
+language: python
 cache: pip
 os:
 - linux
