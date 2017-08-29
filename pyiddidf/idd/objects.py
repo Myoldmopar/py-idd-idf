@@ -11,7 +11,7 @@ class IDDField:
 
     Constructor parameters:
 
-    :param str an_index: The Ai or Ni descriptor for this field in the IDD, where i is an integer 1-...
+    :param str an_index: The A_i or N_i descriptor for this field in the IDD, where i is an integer 1-...
     """
 
     def __init__(self, an_index):
