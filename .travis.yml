@@ -1,23 +1,38 @@
-language: python
-
-python:
-  - "2.7"
-
+language: generic
 cache: pip
-
+os:
+- linux
 env:
   matrix:
-    - TOX_ENV=python
-    - TOX_ENV=flake8
-    - TOX_ENV=spelling
-    - TOX_ENV=package
-
+  - TOX_ENV=python
+  - TOX_ENV=flake8
+  - TOX_ENV=spelling
+  - TOX_ENV=binary
 install:
-  - pip install --upgrade pip
-  - pip install tox
-  - pip install tox coveralls
-
+- sudo apt-get install python-enchant -y
+- pip install --upgrade pip
+- pip install tox coveralls
 script:
-  - tox -e $TOX_ENV
-
+- tox -e $TOX_ENV
 after_success: test $TOX_ENV = "python" && coveralls
+#deploy:
+#- provider: pypi
+#  user: Myoldmopar
+#  skip_cleanup: true
+#  skip_upload_docs: true
+#  password:
+#    secure: Ax9rCEWnrKPsfLVHe7t5jbS2uS1/aerbvi9GXEYoTWh3/B3a3G3eP2HKt8dITZomuPzXh7Wu6FRmcteJ9DUk6PHcqSKgLIf47JN6q/Afvz6PapTt2PNIAEp2rIyRBMlvbI915Z5v4JJ6td59xSIX9MNKIHBDgDQzZocACc0xjW4z11t8ZgUhBSFOxbEQHDSCVbI2bfjBXXS3ynljg+Z5CmkcGePaUYsDFrognaw8Jbl+Ru7bq6kRDnIhtW2sR4BXdo9Lf9Bp6qY4Wap2570xr9DbTuvebsci+Ouy9Dasu3rVzI6qEqOB9IVN8u9AL6P1q86tyQzH51jELoofd0sBlalL3mKaP5MXkghSpQQS18iboKWS5AMiznnFla5y0amUDscAhA1u6DbxcG6uvL6Cm5wEebLqoDdDfWDSo9rPSwdu3REJ0Y7+KsO11otjlqhoulWxkcM5WSRRaA7ZQrC308U0sEeK/FmUT+Xug4bfXJf6lWl1RvDVqls64v7Cqq1IGabIeBNwS8rCP7is2a2tQdo/A27+jfLUKv8eu6VfNWdSzi2rRaNky6+7hdZzUL28I6WCx4gTmyJxKlTUSnT6CBYMi77ePvnGrb73rLq8PMiX2LD6qPYmcwVc7mxz9Wk1yqsIUGZn6YRqXR2FI763ebeK1m4cNUMCZsApYydywJk=
+#  on:package
+#    tags: true
+#    condition: $TOX_ENV = package
+#  distributions: sdist bdist_wheel
+#  repo: Myoldmopar/ep-transition
+#- provider: releases
+#  skip_cleanup: true
+#  api_key:
+#    secure: k+mg38vs1FT7SgCf//Yl35G6S5oGl/Ujz/iTBrKx9pkUvqKb+pL8xq3p+xNBCVyCQZvvFfnMI0Se6ZyJt0PsjkZOJtSIfUgtvL8G6LqINyef7VFOyu92d15e2mEyshwtl6eumzHC74+XZJuQJLp9rvZfogy3oBypPO9rCcIzMZ2KaZ+2+SEEMKAnSjrpLBm6CRN8BneV8D+Wma8CpzgPHRS3G0Aa8rxtAUTi8A9GWUFMi+rWF8odAB4krDsylvTh5hBqlbtDN2Io2CzcEk8gGdEI5Q9kRaMfh+QtZJlU4FuIKtnDvM59MWxnsAzdxeCsoV076qqspSp6aHb7Y7XiOCL1LGuvWPP8k5ALEyZUob+IU/74dQItxoc40ftZvWSpuX//KdgHp1W0ZxDSwUj2+Pl7aIQn5eexlJaCAEE4LVEbWYa9GBRAuDmbiVAm/xPu+F1VIOlrI5OtINua5ATZMNOmpqiHlE7neqBcHjJDndRJ5u+hdMRD3ud1KGj0RqnZwYogl0vasq65oya8TsIgnJrySHVOC3jMpg6z8xIZpacpJmk1lsjs4d+ygEdEicazXe/VkTw9rfY+7LaR81ynjG1OaTerCxZGmIOU0l8CnzBbklfiAvpfJw7GXvkyyTngnmmxM96D1QQr4HHYWqw6kO18XEhwxYI5BvBCE7s/exs=
+#  file_glob: true
+#  file: dist/eptransition*
+#  on:
+#    tags: true
+#    condition: $TOX_ENV = binary
