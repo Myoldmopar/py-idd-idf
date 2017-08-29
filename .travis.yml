@@ -7,7 +7,7 @@ env:
   - TOX_ENV=python
   - TOX_ENV=flake8
   - TOX_ENV=spelling
-  - TOX_ENV=binary
+  - TOX_ENV=package
 install:
 - sudo apt-get install python-enchant -y
 - pip install --upgrade pip
