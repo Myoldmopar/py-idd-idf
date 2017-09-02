@@ -211,6 +211,7 @@ MyObject,
        \\required-field
   N1,  \\field A
        \\required-field
+       \\units m
   N2,  \\field B
        \\required-field
   N3;  \\field C
@@ -251,6 +252,56 @@ MyObject,Name,ZoneName,1;"""
         idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('MyObject')[0]
         issues = idf_object.validate(self.idd_object)
         self.assertEqual(len(issues), 2)
+
+    def test_units_are_persisted_when_writing(self):
+        idf_string = """
+Version,12.9;
+MyObject,Name,ZoneName,1,2,3;"""
+        idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('MyObject')[0]
+        issues = idf_object.validate(self.idd_object)
+        self.assertEqual(len(issues), 0)
+        os = idf_object.object_string(self.idd_object)
+        self.assertIn('{m}', os)
+
+
+class TestWritingWholeIDF(unittest.TestCase):
+
+    def setUp(self):
+        idd_string = """
+    !IDD_Version 13.9.0
+    !IDD_BUILD abcdef1018
+    \group MyGroup
+    Version,
+      A1;  \\field VersionID
+
+    MyObject,
+           \\min-fields 5
+      A1,  \\field Name
+           \\required-field
+      A2,  \\field Zone Name
+           \\required-field
+      N1,  \\field A
+           \\required-field
+           \\units m
+      N2,  \\field B
+           \\required-field
+      N3;  \\field C
+           \\default 0.8
+           \\required-field
+            """
+        self.idd_structure = IDDProcessor().process_file_via_string(idd_string)
+        self.idd_object = self.idd_structure.get_object_by_type('MyObject')
+
+    def test_units_are_persisted_when_writing(self):
+        idf_string = """
+Version,12.9;
+MyObject,Name,ZoneName,1,2,3;"""
+        idf_structure = IDFProcessor().process_file_via_string(idf_string)
+        issues = idf_structure.validate(self.idd_structure)
+        self.assertEqual(len(issues), 0)
+        import tempfile
+        file_object = tempfile.NamedTemporaryFile()
+        idf_structure.write_idf(file_object.name, self.idd_structure)
 
 
 class TestIDFStructureValidation(unittest.TestCase):
