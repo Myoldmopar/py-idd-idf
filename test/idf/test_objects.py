@@ -378,6 +378,21 @@ class TestGlobalSwap(unittest.TestCase):
         idf_object = idf_structure.get_idf_objects_by_type("ObjectU")[0]
         self.assertIn("MySecondKey", idf_object.fields)
 
+    def test_swapping_including_comment(self):
+        idf_string = """
+        Version,
+         87.11;
+        ObjectU,
+         MyFirstKey;
+        ! Comments here
+        ObjectU,
+         NotMyFirstKey;
+        """
+        idf_structure = IDFProcessor().process_file_via_string(idf_string)
+        idf_structure.global_swap({"MyFirstKey": "MySecondKey"})
+        idf_object = idf_structure.get_idf_objects_by_type("ObjectU")[0]
+        self.assertIn("MySecondKey", idf_object.fields)
+
 
 class TestValidationIssue(unittest.TestCase):
 
