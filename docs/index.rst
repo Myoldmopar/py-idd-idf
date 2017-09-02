@@ -12,6 +12,7 @@ This is a Python library useful for reading/writing/validating EnergyPlus input 
    :maxdepth: 2
    :caption: Contents:
 
+   usage
    idd_objects
    idd_processor
    idf_objects
