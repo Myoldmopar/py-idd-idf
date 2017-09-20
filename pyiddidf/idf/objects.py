@@ -107,6 +107,9 @@ class IDFObject(object):
         else:
             if len(self.fields) == 0:
                 s = self.object_name + ";\n"
+            elif '\\format' in idd_object.meta_data and 'singleLine' in idd_object.meta_data['\\format']:
+                field_token_string = ",".join([field for field in self.fields])
+                s = self.object_name + ',' + field_token_string + ';\n'
             else:
                 idd_fields = idd_object.fields
                 s = self.object_name + ",\n"

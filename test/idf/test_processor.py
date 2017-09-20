@@ -149,7 +149,14 @@ class TestIDFProcessingViaFile(unittest.TestCase):
         idd_path = os.path.join(self.support_file_dir, "Energy+.idd")
         idd_processor = IDDProcessor()
         idd_structure = idd_processor.process_file_given_file_path(idd_path)
-        out_idf_file_path = tempfile.mktemp()
+        out_idf_file_path = tempfile.mktemp(suffix=".idf")
+        # print("Writing new idf to: " + out_idf_file_path)
         idf_structure.write_idf(out_idf_file_path, idd_structure)
         # soon we'd like to assert that the original and the newly written are the same
-        # this can't be done right now primarily due to the library not abiding by the singleline idd attribute
+        # this can't be done right now primarily because the original idf is not "properly" formatted
+        # the 3 points of vertices on surfaces are on one line which I'm not planning to support
+        # similar with the schedule:compact objects
+        # I just need to pick a better idf file to start with
+
+        # import filecmp
+        # filecmp.cmp(idf_path, out_idf_file_path)
