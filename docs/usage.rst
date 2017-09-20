@@ -1,4 +1,4 @@
 Library Usage
 =============
 
-This page will describe the workflow for this library.
+This page will describe the work flow for this library.

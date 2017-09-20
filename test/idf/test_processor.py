@@ -1,9 +1,11 @@
 import StringIO
 import os
+import tempfile
 import unittest
 
 from pyiddidf.exceptions import ProcessingException
 from pyiddidf.idf.processor import IDFProcessor
+from pyiddidf.idd.processor import IDDProcessor
 
 
 class TestIDFProcessingViaStream(unittest.TestCase):
@@ -138,3 +140,23 @@ class TestIDFProcessingViaFile(unittest.TestCase):
         idf_structure = processor.process_file_given_file_path(idf_path)
         self.assertEquals(1, len(idf_structure.objects))
         self.assertAlmostEqual(idf_structure.version_float, 1.1, 1)
+
+    def test_rewriting_idf(self):
+        idf_path = os.path.join(self.support_file_dir, "1ZoneEvapCooler.idf")
+        idf_processor = IDFProcessor()
+        idf_structure = idf_processor.process_file_given_file_path(idf_path)
+        self.assertEquals(80, len(idf_structure.objects))
+        idd_path = os.path.join(self.support_file_dir, "Energy+.idd")
+        idd_processor = IDDProcessor()
+        idd_structure = idd_processor.process_file_given_file_path(idd_path)
+        out_idf_file_path = tempfile.mktemp(suffix=".idf")
+        # print("Writing new idf to: " + out_idf_file_path)
+        idf_structure.write_idf(out_idf_file_path, idd_structure)
+        # soon we'd like to assert that the original and the newly written are the same
+        # this can't be done right now primarily because the original idf is not "properly" formatted
+        # the 3 points of vertices on surfaces are on one line which I'm not planning to support
+        # similar with the schedule:compact objects
+        # I just need to pick a better idf file to start with
+
+        # import filecmp
+        # filecmp.cmp(idf_path, out_idf_file_path)

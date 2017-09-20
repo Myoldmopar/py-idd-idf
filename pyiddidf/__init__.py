@@ -1,1 +1,5 @@
-__version__ = 0.5
+import idd
+import idf
+
+__version__ = 0.6
+__all__ = ['idd', 'idf', 'exceptions']
