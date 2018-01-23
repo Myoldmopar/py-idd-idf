@@ -67,6 +67,25 @@ Version,
         version_obj = ret_value.get_object_by_type("version")
         self.assertEquals(1, len(version_obj.fields))
 
+    def test_new_reference_class_name(self):
+        idd_object = """
+!IDD_Version 0.1.4
+!IDD_BUILD abcded0810
+\\group Simulation Parameters
+NewObject,
+  A1;  \\field Name
+       \\required-field
+       \\type alpha
+       \\reference-class-name validBranchEquipmentTypes
+       \\reference validBranchEquipmentNames
+        """
+        processor = IDDProcessor()
+        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        self.assertEquals(1, len(ret_value.groups))
+        self.assertEquals(1, len(ret_value.groups[0].objects))
+        version_obj = ret_value.get_object_by_type("NewObject")
+        self.assertEquals(1, len(version_obj.fields))
+
     def test_single_line_obj_lookup(self):
         idd_object = """
 !IDD_Version 1.2.0
