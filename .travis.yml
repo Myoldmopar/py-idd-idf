@@ -16,14 +16,15 @@ script:
 - tox -e $TOX_ENV
 after_success: test $TOX_ENV = "python" && coveralls
 deploy:
-- provider: pypi
-  user: Myoldmopar
-  skip_cleanup: true
-  skip_upload_docs: true
-  password:
-    secure: Iy2tGAryeQ+ij8ZnKxXPRF+g2Wv/z/7AXsek4gcQbva8ymiURa+4JecjDifftqjW3/qUk+c1Ln22SH26NlYDAP1g8r4kyrZFzCKIIPQNNlej3Qri3+f6GWRMHCfjD6fKNPCxufg1ZoYF7EqPctW3FGGVD7zW2POkqSp2KKDyet6VkqLADiQMWx681HaPjPoWciID6/05+8B9QCqG4oEmkfUqaGV3KuYtZI7Oc6uQDs/Xjhuv6PRumNlo7BfzUQSe05nop3ALI6XyngaB60+pz3tAJVv2wTzUC8vA99Ajo1cwGtbNvUnI7COb5Os9QoMDzVCFBUBCpa6zNxuGyzPGHc0Du0Gv3afyNYLqfsunPzOUg1v597P8hE41TSGqD0FTUnb8cXnDxrprhucgTzxdpuVGHYk925bQVLvjFYQ186Gi3VZR/WrFZns2dOcyk2inaDe+HOiS/yh+5HGnLG5rDZutfTuDcI62DbKppScyucpanhD7WaYieLbZakB+WJB5tvaSQhmHg8D89MdnGXzYMyCiMirO14EnvvEm3jkPcMkUPxodiu+iHk2VvZoa+AKFYMlHrcgJuyqZNxKvvNy6unZzNxlooGny/sL8gWCcS3qqvRn1UzAIeEqgYtop180tIPoUKRDmpzFMrhqhLyuTC9E4HVuJ2AMtcOotxBEXcP0=
-  on:
-    tags: true
-    distributions: sdist bdist_wheel
-    repo: Myoldmopar/py-idd-idf
-    condition: $TOX_ENV = package
+  matrix:
+  - provider: pypi
+    user: Myoldmopar
+    skip_cleanup: true
+    skip_upload_docs: true
+    password:
+      secure: Lq1qVjiySMngcCxLxhY/WXEmSm0Jn/l1/gUCSaR5bK2aJ5cPccIbMzMntDS0skAggEcFfW8DdH+a1auWlcB7WeYS9ES6E0gz6MamcZIUlHUi2kdzK7OT5mRVI+NTmPEkDJPs9LpmPU5aNV98yWJAVKXtJFcra6WgZYBFuvMVZjJj/wxrC94HkMVDyg9phPw5AKIwwxXWNcuRgEmP4HxrnDjHYCe7xVazaTE5ZyPB89mGrpP/dpsu9DD8fQDv2AO6uiUrk6KW/vQBsevD3s46HMh70dOKbgJRCnE7FOQGyavhSHCtLS+hw2zxni7B/F9X1qMd6uxoyRWkmh/qio35P1Je/q2YLjSt9Zy01qg3qXb4aG9K3cd/o0FV+kCgnqVNmnfHQyXcezwjT6h2BvMtADQfLmc5+uqntUOEB/OAgSuRLQRE4AhGkstYKngiZ/5o/9EyoiVjbFEMynUe3k2hWkfaBeeScFzTJenX5WbFGPnmDrgBcLTCVqpqyqLB2wYpGipeBtD5Df0oDJk93fEd31JmErPhzxfX1e4uACD7zE+Tkc9mT4pkMX/BB6AcV8cZGxwdF6NibEVcefTv3lViIMIppYMqixvvhWCXQEvtS1JGg9Iw78bMLdy1QqQKzwR7kkhexPTrrc0L8WhXyCKWFFivRSz12epy9I0KmIhCVEk=
+    on:
+      tags: true
+      distributions: sdist bdist_wheel
+      repo: Myoldmopar/py-idd-idf
+      condition: "$TOX_ENV = package"
