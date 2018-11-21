@@ -131,8 +131,7 @@ class TestIDFProcessingViaFile(unittest.TestCase):
     def test_blank_idf(self):
         idf_path = os.path.join(self.support_file_dir, "Blank.idf")
         processor = IDFProcessor()
-        with self.assertRaises(ProcessingException):  # should fail because needs version object at least
-            processor.process_file_given_file_path(idf_path)
+        processor.process_file_given_file_path(idf_path)
 
     def test_minimal_idf(self):
         idf_path = os.path.join(self.support_file_dir, "Minimal.idf")
