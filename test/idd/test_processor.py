@@ -4,7 +4,7 @@ from unittest import TestCase, skipIf
 
 from pyiddidf import settings
 from pyiddidf.exceptions import ProcessingException
-from pyiddidf.idd.processor import IDDProcessor
+from pyiddidf.idd_processor import IDDProcessor
 
 
 class TestIDDProcessingViaStream(TestCase):

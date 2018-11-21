@@ -3,7 +3,7 @@ import logging
 import os
 
 from pyiddidf import exceptions
-from pyiddidf.idd.objects import IDDField, IDDObject, IDDStructure, IDDGroup
+from pyiddidf.idd_objects import IDDField, IDDObject, IDDStructure, IDDGroup
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 

@@ -1,10 +1,9 @@
 import StringIO
 import unittest
 
-from pyiddidf.exceptions import ProcessingException
-from pyiddidf.idd.processor import IDDProcessor
-from pyiddidf.idf.objects import IDFObject, ValidationIssue
-from pyiddidf.idf.processor import IDFProcessor
+from pyiddidf.idd_processor import IDDProcessor
+from pyiddidf.idf_objects import IDFObject, ValidationIssue
+from pyiddidf.idf_processor import IDFProcessor
 
 
 class TestIDFObject(unittest.TestCase):
