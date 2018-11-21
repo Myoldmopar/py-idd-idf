@@ -1,5 +1,5 @@
 import idd
 import idf
 
-__version__ = 0.8
+__version__ = 0.81
 __all__ = ['idd', 'idf', 'exceptions']

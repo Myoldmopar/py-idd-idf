@@ -93,9 +93,11 @@ MyObject,
         self.assertEqual(len(issues), 0)
 
     def test_missing_version(self):
+        # Missing version is now supported
         idf_string = "MyObject,1,1,1;"
-        with self.assertRaises(ProcessingException):
-            IDFProcessor().process_file_via_string(idf_string)
+        idf_processor = IDFProcessor().process_file_via_string(idf_string)
+        version_object = idf_processor.get_idf_objects_by_type('Version')
+        self.assertEqual(0, len(version_object))
 
     def test_non_numeric(self):
         idf_string = "Version,12.9;MyObject,A,1,1;"
