@@ -185,14 +185,18 @@ class IDFProcessor:
 
         try:
             self.idf.version_string = self.idf.get_idf_objects_by_type("Version")[0].fields[0]
+            parse_version = True
         except IndexError:
-            raise exceptions.ProcessingException("Could not get version object in idf!")
-        try:
-            version_tokens = self.idf.version_string.split(".")
-            tmp_string = "{}.{}".format(version_tokens[0], version_tokens[1])
-            self.idf.version_float = float(tmp_string)
-        except ValueError:
-            raise exceptions.ProcessingException(
-                "Found IDF version, but could not coerce into floating point representation")
-
+            self.idf.version_string = 'UNKNOWN VERSION'
+            parse_version = False
+        if parse_version:
+            try:
+                version_tokens = self.idf.version_string.split(".")
+                tmp_string = "{}.{}".format(version_tokens[0], version_tokens[1])
+                self.idf.version_float = float(tmp_string)
+            except ValueError:
+                raise exceptions.ProcessingException(
+                    "Found IDF version, but could not coerce into floating point representation")
+        else:
+            self.idf.version_float = 0.0
         return self.idf

@@ -48,7 +48,7 @@ class IDDProcessor:
         self.file_path = None
         self.group_flag_string = "\\group"
         self.obj_flags = ["\\memo", "\\unique-object", "\\required-object", "\\min-fields",
-                          "\\obselete", "\\extensible", "\\format"]
+                          "\\obsolete", "\\extensible", "\\format"]
         self.field_flags = ["\\field", "\\note", "\\required-field", "\\begin-extensible", "\\unitsBasedOnField",
                             "\\units", "\\ip-units", "\\scheduleunits", "\\minimum", "\\maximum", "\\default",
                             "\\deprecated", "\\autosizable", "\\autocalculatable", "\\type", "\\retaincase",
@@ -270,7 +270,7 @@ class IDDProcessor:
                     if token_builder in self.obj_flags:
                         cur_obj_meta_data_type = token_builder
                         token_builder = ""
-                        if cur_obj_meta_data_type in ["\\obselete", "\\required-object", "\\unique-object"]:
+                        if cur_obj_meta_data_type in ["\\required-object", "\\unique-object"]:
                             # these do not carry further data, stop reading now
                             if cur_obj_meta_data_type not in cur_object.meta_data:
                                 string_list = [None]
