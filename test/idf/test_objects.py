@@ -1,5 +1,5 @@
-import io
 import unittest
+from io import StringIO
 
 from pyiddidf.idd_processor import IDDProcessor
 from pyiddidf.idf_objects import IDFObject, ValidationIssue
@@ -13,7 +13,7 @@ class TestIDFObject(unittest.TestCase):
         self.assertEquals("Objecttype", obj.object_name)
         self.assertEquals(4, len(obj.fields))
         obj.object_string()
-        s = io.StringIO()
+        s = StringIO()
         obj.write_object(s)
         expected_string = """Objecttype,
   object_name,             !-%20

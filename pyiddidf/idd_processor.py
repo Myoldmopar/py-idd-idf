@@ -1,6 +1,6 @@
-import io
 import logging
 import os
+from io import StringIO
 
 from pyiddidf import exceptions
 from pyiddidf.idd_objects import IDDField, IDDObject, IDDStructure, IDDGroup
@@ -89,7 +89,7 @@ class IDDProcessor:
         :param str idd_string: An IDD snippet string
         :return: An IDDStructure instance created from processing the IDD string
         """
-        self.idd_file_stream = io.StringIO(idd_string)
+        self.idd_file_stream = StringIO(idd_string)
         self.file_path = "/string/idd/snippet"
         return self.process_file()
 

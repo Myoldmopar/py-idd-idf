@@ -1,6 +1,6 @@
-import io
 import logging
 import os
+from io import StringIO
 
 from pyiddidf import exceptions
 from pyiddidf.idf_objects import IDFObject, IDFStructure
@@ -59,7 +59,7 @@ class IDFProcessor:
         :param str idf_string: An IDF snippet string
         :return: An IDFStructure instance created from processing the IDF string
         """
-        self.input_file_stream = io.StringIO(idf_string)
+        self.input_file_stream = StringIO(idf_string)
         self.file_path = "/string/idf/snippet"
         return self.process_file()
 
