@@ -1,16 +1,24 @@
 language: python
-python:
-  - "2.7"
-  - "3.7"
+matrix:
+  include:
+    - python: "2.7"
+      env: TOX_ENV=python
+    - python: "2.7"
+      env: TOX_ENV=flake8
+    - python: "2.7"
+      env: TOX_EVN=package
+
+    - python: "3.7"
+      env: TOX_ENV=python
+    - python: "3.7"
+      env: TOX_ENV=flake8
+    - python: "3.7"
+      env: TOX_ENV=spelling
+    - python: "3.7"
+      env: TOX_ENV=package
 cache: pip
 os:
   - linux
-env:
-  matrix:
-    - TOX_ENV=python
-    - TOX_ENV=flake8
-    - TOX_ENV=spelling
-    - TOX_ENV=package
 install:
   - sudo apt-get install python-enchant -y
   - pip install --upgrade pip
