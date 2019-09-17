@@ -1,11 +1,16 @@
 import os
+import sys
 import tempfile
 import unittest
-from io import StringIO
 
 from pyiddidf.exceptions import ProcessingException
 from pyiddidf.idd_processor import IDDProcessor
 from pyiddidf.idf_processor import IDFProcessor
+
+if sys.version_info > (3, 0):
+    from io import StringIO as IOStr
+else:
+    from StringIO import StringIO as IOStr
 
 
 class TestIDFProcessingViaStream(unittest.TestCase):
@@ -20,7 +25,7 @@ ObjectType,
  Final Value;        !- With Semicolon
 """
         processor = IDFProcessor()
-        idf_structure = processor.process_file_via_stream(StringIO(idf_object))
+        idf_structure = processor.process_file_via_stream(IOStr(idf_object))
         self.assertEquals(2, len(idf_structure.objects))
 
     def test_indented_idf(self):
@@ -34,13 +39,13 @@ ObjectType,
  Final Value;        !- With Semicolon
 """
         processor = IDFProcessor()
-        idf_structure = processor.process_file_via_stream(StringIO(idf_object))
+        idf_structure = processor.process_file_via_stream(IOStr(idf_object))
         self.assertEquals(2, len(idf_structure.objects))
 
     def test_one_line_idf(self):
         idf_object = """Version,1.1;ObjectType,This Object Name,Descriptive Field,3.4,,Final Value;"""
         processor = IDFProcessor()
-        idf_structure = processor.process_file_via_stream(StringIO(idf_object))
+        idf_structure = processor.process_file_via_stream(IOStr(idf_object))
         self.assertEquals(2, len(idf_structure.objects))
 
     def test_valid_goofy_idf(self):
@@ -55,7 +60,7 @@ something, !- with a comment
 last field with space; ! and comment for fun
 """
         processor = IDFProcessor()
-        idf_structure = processor.process_file_via_stream(StringIO(idf_object))
+        idf_structure = processor.process_file_via_stream(IOStr(idf_object))
         self.assertEquals(2, len(idf_structure.objects))
 
     def test_valid_goofy_idf_2(self):
@@ -69,7 +74,7 @@ something, !- with a comment
 last field with space; ! and comment for fun
 """
         processor = IDFProcessor()
-        idf_structure = processor.process_file_via_stream(StringIO(idf_object))
+        idf_structure = processor.process_file_via_stream(IOStr(idf_object))
         self.assertEquals(3, len(idf_structure.objects))  # comment + two objects
 
     def test_nonnumerc_version(self):
@@ -78,7 +83,7 @@ Version,A.Q;
 """
         processor = IDFProcessor()
         with self.assertRaises(ProcessingException):
-            processor.process_file_via_stream(StringIO(idf_object))
+            processor.process_file_via_stream(IOStr(idf_object))
 
     def test_missing_comma(self):
         idf_object = """
@@ -90,7 +95,7 @@ something, !- with a comment
 """
         processor = IDFProcessor()
         with self.assertRaises(ProcessingException):
-            processor.process_file_via_stream(StringIO(idf_object))
+            processor.process_file_via_stream(IOStr(idf_object))
 
     def test_missing_semicolon(self):
         idf_object = """
@@ -101,7 +106,7 @@ something without a semicolon !- with a comment
 """
         processor = IDFProcessor()
         with self.assertRaises(ProcessingException):
-            processor.process_file_via_stream(StringIO(idf_object))
+            processor.process_file_via_stream(IOStr(idf_object))
 
 
 class TestIDFProcessingViaFile(unittest.TestCase):

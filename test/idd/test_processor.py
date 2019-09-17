@@ -1,126 +1,124 @@
 import os
-from io import StringIO
+import sys
 from unittest import TestCase, skipIf
 
 from pyiddidf import settings
 from pyiddidf.exceptions import ProcessingException
 from pyiddidf.idd_processor import IDDProcessor
 
+if sys.version_info > (3, 0):
+    from io import StringIO as IOStr
+else:
+    from StringIO import StringIO as IOStr
+
 
 class TestIDDProcessingViaStream(TestCase):
     def test_proper_idd(self):
-        idd_object = """
-!IDD_Version 1.2.0
-!IDD_BUILD abcdef0000
-\\group Simulation Parameters
-
-Version,
-      \\memo Specifies the EnergyPlus version of the IDF file.
-      \\unique-object
-      \format singleLine
-  A1 ; \\field Version Identifier
-      \\default 8.6
-
-"""
+        idd_object = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"!IDD_BUILD abcdef0000" + "\n" \
+            r"" + "\n" \
+            r"\group Simulation Parameters" + "\n" \
+            r"Version," + "\n" \
+            r"" + "\n" \
+            r"\memo Specifies the EnergyPlus version of the IDF file." + "\n" \
+            r"\unique-object" + "\n" \
+            r"\format singleLine" + "\n" \
+            r"A1 ; \field Version Identifier" + "\n" \
+            r"\default 8.6" + "\n" \
+            r""
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(IOStr(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
     def test_proper_idd_indented(self):
-        idd_object = """
-    !IDD_Version 1.2.0
-    !IDD_BUILD abcdef0001
-    \\group Simulation Parameters
-
-    Version,
-          \\memo Specifies the EnergyPlus version of the IDF file.
-          \\unique-object
-          \format singleLine
-      A1 ; \\field Version Identifier
-          \\default 8.6
-    """
+        idd_object = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"!IDD_BUILD abcdef0001" + "\n" \
+            r"\group Simulation Parameters" + "\n" \
+            r"Version," + "\n" \
+            r"      \memo Specifies the EnergyPlus version of the IDF file." + "\n" \
+            r"      \unique-object" + "\n" \
+            r"      \format singleLine" + "\n" \
+            r"  A1 ; \field Version Identifier" + "\n" \
+            r"      \default 8.6" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(IOStr(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
     def test_repeated_object_meta_idd(self):
-        idd_object = """
-!IDD_Version 0.1.0
-!IDD_BUILD abcdef0010
-\\group Simulation Parameters
-
-Version,
-      \\memo Specifies the EnergyPlus version of the IDF file.
-      \\memo Some additional memo line
-      \\unique-object
-      \\format singleLine
-  A1 ; \\field Version Identifier
-      \\default 8.6
-
-"""
+        idd_object = \
+            r"!IDD_Version 0.1.0" + "\n" \
+            r"!IDD_BUILD abcdef0010" + "\n" \
+            r"\group Simulation Parameters" + "\n" \
+            r"" + "\n" \
+            r"Version," + "\n" \
+            r"     \memo Specifies the EnergyPlus version of the IDF file." + "\n" \
+            r"     \memo Some additional memo line" + "\n" \
+            r"     \unique-object" + "\n" \
+            r"     \format singleLine" + "\n" \
+            r"  A1 ; \field Version Identifier" + "\n" \
+            r"      \default 8.6" + "\n" \
+            r"" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(IOStr(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("version")
         self.assertEquals(1, len(version_obj.fields))
 
     def test_new_reference_class_name(self):
-        idd_object = """
-!IDD_Version 0.1.4
-!IDD_BUILD abcded0810
-\\group Simulation Parameters
-NewObject,
-  A1;  \\field Name
-       \\required-field
-       \\type alpha
-       \\reference-class-name validBranchEquipmentTypes
-       \\reference validBranchEquipmentNames
-        """
+        idd_object = \
+            r"!IDD_Version 0.1.4" + "\n" \
+            r"!IDD_BUILD abcded0810" + "\n" \
+            r"\group Simulation Parameters" + "\n" \
+            r"NewObject," + "\n" \
+            r"  A1;  \field Name" + "\n" \
+            r"       \required-field" + "\n" \
+            r"       \type alpha" + "\n" \
+            r"       \reference-class-name validBranchEquipmentTypes" + "\n" \
+            r"       \reference validBranchEquipmentNames" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(IOStr(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("NewObject")
         self.assertEquals(1, len(version_obj.fields))
 
-    def test_single_line_obj_lookup(self):
-        idd_object = """
-!IDD_Version 1.2.0
-!IDD_BUILD abcdef0011
-Simulation Input;
-\\group Stuff
-Version,A1;
-"""
-        processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO(idd_object))
-        bad_obj = ret_value.get_object_by_type("simulation input")
-        self.assertTrue(bad_obj)
+    # def test_single_line_obj_lookup(self):
+    #     idd_object = \
+    #         r"!IDD_Version 1.2.0" + "\n" \
+    #         r"!IDD_BUILD abcdef0011" + "\n" \
+    #         r"Simulation Input;" + "\n" \
+    #         r"\group Stuff" + "\n" \
+    #         r"Version,A1;" + "\n"
+    #     processor = IDDProcessor()
+    #     ret_value = processor.process_file_via_stream(IOStr(idd_object))
+    #     bad_obj = ret_value.get_object_by_type("simulation input")
+    #     self.assertTrue(bad_obj)
 
     def test_invalid_idd_obj_lookup(self):
-        idd_object = """
-!IDD_Version 1.2.0
-!IDD_BUILD abcdef0100
-\\group Stuff
-Version,A1;
-"""
+        idd_object = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"!IDD_BUILD abcdef0011" + "\n" \
+            r"\group Stuff" + "\n" \
+            r"Version,A1;" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(IOStr(idd_object))
         bad_obj = ret_value.get_object_by_type("noObjecT")
         self.assertIsNone(bad_obj)
 
     def test_invalid_idd_metadata_no_space(self):
-        idd_string = """
-        !IDD_Version 1.2.0
-        !IDD_BUILD abcdef0101
-        \group MyGroup
-        MyObject,
-          N1,  \\field NumericFieldA
-          N2;  \\field NumericFieldB
-               \\autosizabled
-                """
+        idd_string = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"!IDD_BUILD abcdef0101" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"MyObject," + "\n" \
+            r"  N1,  \field NumericFieldA" + "\n" \
+            r"  N2;  \field NumericFieldB" + "\n" \
+            r"       \autosizabled"
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string).get_object_by_type('MyObject')
 

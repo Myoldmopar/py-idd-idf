@@ -1,9 +1,14 @@
-import logging
 import os
-from io import StringIO
+import sys
+import logging
 
 from pyiddidf import exceptions
 from pyiddidf.idf_objects import IDFObject, IDFStructure
+
+if sys.version_info > (3, 0):
+    from io import StringIO as IOStr
+else:
+    from StringIO import StringIO as IOStr
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 
@@ -59,7 +64,7 @@ class IDFProcessor:
         :param str idf_string: An IDF snippet string
         :return: An IDFStructure instance created from processing the IDF string
         """
-        self.input_file_stream = StringIO(idf_string)
+        self.input_file_stream = IOStr(idf_string)
         self.file_path = "/string/idf/snippet"
         return self.process_file()
 
