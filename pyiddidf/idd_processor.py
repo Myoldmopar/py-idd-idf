@@ -1,4 +1,4 @@
-import StringIO
+import io
 import logging
 import os
 
@@ -64,7 +64,7 @@ class IDDProcessor:
         """
         if not os.path.exists(file_path):
             raise exceptions.ProcessingException("Input IDD file not found=\"" + file_path + "\"")  # pragma: no cover
-        self.idd_file_stream = open(file_path, "rb")
+        self.idd_file_stream = open(file_path, "r")
         self.file_path = file_path
         return self.process_file()
 
@@ -89,7 +89,7 @@ class IDDProcessor:
         :param str idd_string: An IDD snippet string
         :return: An IDDStructure instance created from processing the IDD string
         """
-        self.idd_file_stream = StringIO.StringIO(idd_string)
+        self.idd_file_stream = io.StringIO(idd_string)
         self.file_path = "/string/idd/snippet"
         return self.process_file()
 

@@ -18,8 +18,8 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
 
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration ------------------------------------------------
 
@@ -31,14 +31,14 @@ sys.path.insert(0, os.path.abspath('..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinxcontrib.spelling']
+              'sphinx.ext.todo',
+              'sphinx.ext.coverage',
+              'sphinxcontrib.spelling']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-spelling_word_list_filename='spelling_wordlist.txt'
+spelling_word_list_filename = 'spelling_wordlist.txt'
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -81,7 +81,6 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -115,12 +114,10 @@ html_sidebars = {
     ]
 }
 
-
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'PythonIDDIDFUtilitiesforEnergyPlusdoc'
-
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -150,7 +147,6 @@ latex_documents = [
      u'Edwin Lee', 'manual'),
 ]
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
@@ -159,7 +155,6 @@ man_pages = [
     (master_doc, 'pythoniddidfutilitiesforenergyplus', u'Python IDD/IDF Utilities for EnergyPlus Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -171,6 +166,3 @@ texinfo_documents = [
      author, 'PythonIDDIDFUtilitiesforEnergyPlus', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

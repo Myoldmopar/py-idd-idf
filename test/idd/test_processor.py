@@ -1,4 +1,4 @@
-import StringIO
+import io
 import os
 from unittest import TestCase, skipIf
 
@@ -23,7 +23,7 @@ Version,
 
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(io.StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
@@ -41,7 +41,7 @@ Version,
           \\default 8.6
     """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(io.StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
@@ -61,7 +61,7 @@ Version,
 
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(io.StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("version")
@@ -80,7 +80,7 @@ NewObject,
        \\reference validBranchEquipmentNames
         """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(io.StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("NewObject")
@@ -95,7 +95,7 @@ Simulation Input;
 Version,A1;
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(io.StringIO(idd_object))
         bad_obj = ret_value.get_object_by_type("simulation input")
         self.assertTrue(bad_obj)
 
@@ -107,7 +107,7 @@ Version,A1;
 Version,A1;
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(io.StringIO(idd_object))
         bad_obj = ret_value.get_object_by_type("noObjecT")
         self.assertIsNone(bad_obj)
 

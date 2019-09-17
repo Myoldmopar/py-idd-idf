@@ -1,29 +1,29 @@
 language: python
 cache: pip
 os:
-- linux
+  - linux
 env:
   matrix:
-  - TOX_ENV=python
-  - TOX_ENV=flake8
-  - TOX_ENV=spelling
-  - TOX_ENV=package
+    - TOX_ENV=python
+    - TOX_ENV=flake8
+    - TOX_ENV=spelling
+    - TOX_ENV=package
 install:
-- sudo apt-get install python-enchant -y
-- pip install --upgrade pip
-- pip install tox coveralls
+  - sudo apt-get install python-enchant -y
+  - pip install --upgrade pip
+  - pip install tox coveralls
 script:
-- tox -e $TOX_ENV
+  - tox -e $TOX_ENV
 after_success: test $TOX_ENV = "python" && coveralls
 deploy:
-- provider: pypi
-  user: Myoldmopar
-  skip_cleanup: true
-  skip_upload_docs: true
-  password:
-    secure: Lq1qVjiySMngcCxLxhY/WXEmSm0Jn/l1/gUCSaR5bK2aJ5cPccIbMzMntDS0skAggEcFfW8DdH+a1auWlcB7WeYS9ES6E0gz6MamcZIUlHUi2kdzK7OT5mRVI+NTmPEkDJPs9LpmPU5aNV98yWJAVKXtJFcra6WgZYBFuvMVZjJj/wxrC94HkMVDyg9phPw5AKIwwxXWNcuRgEmP4HxrnDjHYCe7xVazaTE5ZyPB89mGrpP/dpsu9DD8fQDv2AO6uiUrk6KW/vQBsevD3s46HMh70dOKbgJRCnE7FOQGyavhSHCtLS+hw2zxni7B/F9X1qMd6uxoyRWkmh/qio35P1Je/q2YLjSt9Zy01qg3qXb4aG9K3cd/o0FV+kCgnqVNmnfHQyXcezwjT6h2BvMtADQfLmc5+uqntUOEB/OAgSuRLQRE4AhGkstYKngiZ/5o/9EyoiVjbFEMynUe3k2hWkfaBeeScFzTJenX5WbFGPnmDrgBcLTCVqpqyqLB2wYpGipeBtD5Df0oDJk93fEd31JmErPhzxfX1e4uACD7zE+Tkc9mT4pkMX/BB6AcV8cZGxwdF6NibEVcefTv3lViIMIppYMqixvvhWCXQEvtS1JGg9Iw78bMLdy1QqQKzwR7kkhexPTrrc0L8WhXyCKWFFivRSz12epy9I0KmIhCVEk=
-  on:
-    tags: true
-    distributions: sdist bdist_wheel
-    repo: Myoldmopar/py-idd-idf
-    condition: "$TOX_ENV = package"
+  - provider: pypi
+    user: Myoldmopar
+    skip_cleanup: true
+    skip_upload_docs: true
+    password:
+      secure: Lq1qVjiySMngcCxLxhY/WXEmSm0Jn/l1/gUCSaR5bK2aJ5cPccIbMzMntDS0skAggEcFfW8DdH+a1auWlcB7WeYS9ES6E0gz6MamcZIUlHUi2kdzK7OT5mRVI+NTmPEkDJPs9LpmPU5aNV98yWJAVKXtJFcra6WgZYBFuvMVZjJj/wxrC94HkMVDyg9phPw5AKIwwxXWNcuRgEmP4HxrnDjHYCe7xVazaTE5ZyPB89mGrpP/dpsu9DD8fQDv2AO6uiUrk6KW/vQBsevD3s46HMh70dOKbgJRCnE7FOQGyavhSHCtLS+hw2zxni7B/F9X1qMd6uxoyRWkmh/qio35P1Je/q2YLjSt9Zy01qg3qXb4aG9K3cd/o0FV+kCgnqVNmnfHQyXcezwjT6h2BvMtADQfLmc5+uqntUOEB/OAgSuRLQRE4AhGkstYKngiZ/5o/9EyoiVjbFEMynUe3k2hWkfaBeeScFzTJenX5WbFGPnmDrgBcLTCVqpqyqLB2wYpGipeBtD5Df0oDJk93fEd31JmErPhzxfX1e4uACD7zE+Tkc9mT4pkMX/BB6AcV8cZGxwdF6NibEVcefTv3lViIMIppYMqixvvhWCXQEvtS1JGg9Iw78bMLdy1QqQKzwR7kkhexPTrrc0L8WhXyCKWFFivRSz12epy9I0KmIhCVEk=
+    on:
+      tags: true
+      distributions: sdist bdist_wheel
+      repo: Myoldmopar/py-idd-idf
+      condition: "$TOX_ENV = package"

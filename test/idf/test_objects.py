@@ -1,4 +1,4 @@
-import StringIO
+import io
 import unittest
 
 from pyiddidf.idd_processor import IDDProcessor
@@ -13,7 +13,7 @@ class TestIDFObject(unittest.TestCase):
         self.assertEquals("Objecttype", obj.object_name)
         self.assertEquals(4, len(obj.fields))
         obj.object_string()
-        s = StringIO.StringIO()
+        s = io.StringIO()
         obj.write_object(s)
         expected_string = """Objecttype,
   object_name,             !-%20
@@ -180,6 +180,7 @@ MyObject,
         issues = idf_structure.validate(self.idd_structure)
         self.assertEqual(len(issues), 0)
         s_idf = idf_structure.whole_idf_string(self.idd_structure)
+        print(s_idf)
         self.assertTrue('ME COMMENT' in s_idf)
 
     def test_whole_idf_one_invalid(self):
