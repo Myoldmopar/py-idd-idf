@@ -1,3 +1,4 @@
+import io
 import logging
 import os
 
@@ -65,7 +66,7 @@ class IDDProcessor:
         """
         if not os.path.exists(file_path):
             raise exceptions.ProcessingException("Input IDD file not found=\"" + file_path + "\"")  # pragma: no cover
-        self.idd_file_stream = open(file_path, "rb")
+        self.idd_file_stream = io.open(file_path, "rb")
         self.file_path = file_path
         return self.process_file()
 

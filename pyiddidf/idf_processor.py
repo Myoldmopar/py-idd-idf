@@ -1,3 +1,4 @@
+import io
 import logging
 import os
 
@@ -35,7 +36,7 @@ class IDFProcessor:
         """
         if not os.path.exists(file_path):
             raise exceptions.ProcessingException("Input file not found=\"" + file_path + "\"")
-        self.input_file_stream = open(file_path, "r")
+        self.input_file_stream = io.open(file_path, "r", errors='ignore', encoding='UTF-8')
         self.file_path = file_path
         return self.process_file()
 
