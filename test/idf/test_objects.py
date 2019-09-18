@@ -1,14 +1,10 @@
-import sys
 import unittest
+
+from six import StringIO
 
 from pyiddidf.idd_processor import IDDProcessor
 from pyiddidf.idf_objects import IDFObject, ValidationIssue
 from pyiddidf.idf_processor import IDFProcessor
-
-if sys.version_info > (3, 0):
-    from io import StringIO as IOStr
-else:
-    from StringIO import StringIO as IOStr
 
 
 class TestIDFObject(unittest.TestCase):
@@ -18,7 +14,7 @@ class TestIDFObject(unittest.TestCase):
         self.assertEquals("Objecttype", obj.object_name)
         self.assertEquals(4, len(obj.fields))
         obj.object_string()
-        s = IOStr()
+        s = StringIO()
         obj.write_object(s)
         expected_string = """Objecttype,
   object_name,             !-%20
@@ -44,11 +40,11 @@ class TestSingleLineIDFValidation(unittest.TestCase):
         self.assertEquals("SingleLineObject;\n", s)
 
     def test_valid_single_token_object_with_idd(self):
-        idd_string = """
-        !IDD_Version 1.2.0
-        !IDD_BUILD abcdef1001
-        \group MyGroup
-        SingleLineObject;"""
+        idd_string = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"!IDD_BUILD abcdef1001" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"SingleLineObject;" + "\n"
         idd_object = IDDProcessor().process_file_via_string(idd_string).get_object_by_type('SingleLineObject')
         tokens = ["SingleLineObject"]
         obj = IDFObject(tokens)
@@ -60,27 +56,26 @@ class TestSingleLineIDFValidation(unittest.TestCase):
 
 class TestIDFFieldValidation(unittest.TestCase):
     def setUp(self):
-        idd_string = """
-!IDD_Version 12.9.0
-!IDD_BUILD abcdef1010
-\group MyGroup
-Version,
-  A1;  \\field VersionID
-
-MyObject,
-  N1,  \\field NumericFieldA
-       \\minimum 0
-       \\maximum 2
-       \\required-field
-  N2,  \\field NumericFieldB
-       \\minimum> 0
-       \\maximum< 2
-       \\autosizable
-  N3;  \\field NumericFieldB
-       \\minimum> 0
-       \\maximum< 2
-       \\autocalculatable
-        """
+        idd_string = \
+            r"!IDD_Version 12.9.0" + "\n" \
+            r"!IDD_BUILD abcdef1010" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"Version," + "\n" \
+            r"  A1;  \field VersionID" + "\n" \
+            r"" + "\n" \
+            r"MyObject," + "\n" \
+            r"  N1,  \field NumericFieldA" + "\n" \
+            r"       \minimum 0" + "\n" \
+            r"       \maximum 2" + "\n" \
+            r"       \required-field" + "\n" \
+            r"  N2,  \field NumericFieldB" + "\n" \
+            r"       \minimum> 0" + "\n" \
+            r"       \maximum< 2" + "\n" \
+            r"       \autosizable" + "\n" \
+            r"  N3;  \field NumericFieldB" + "\n" \
+            r"       \minimum> 0" + "\n" \
+            r"       \maximum< 2" + "\n" \
+            r"       \autocalculatable" + "\n"
         self.idd_structure = IDDProcessor().process_file_via_string(idd_string)
         self.idd_object = self.idd_structure.get_object_by_type('MyObject')
 
@@ -176,11 +171,11 @@ MyObject,
         self.assertEqual(len(issues), 0)
 
     def test_whole_idf_valid_with_comments(self):
-        idf_string = """
-        Version,12.9;
-        MyObject,1,1,1;
-        ! ME COMMENT
-        MyObject,1,1,1;"""
+        idf_string = \
+            r"Version,12.9;" + "\n" \
+            r"MyObject,1,1,1;" + "\n" \
+            r"! ME COMMENT" + "\n" \
+            r"MyObject,1,1,1;" + "\n"
         idf_structure = IDFProcessor().process_file_via_string(idf_string)
         issues = idf_structure.validate(self.idd_structure)
         self.assertEqual(len(issues), 0)
@@ -203,67 +198,66 @@ MyObject,
 
 class TestIDFObjectValidation(unittest.TestCase):
     def setUp(self):
-        idd_string = """
-!IDD_Version 13.9.0
-!IDD_BUILD abcdef1018
-\group MyGroup
-Version,
-  A1;  \\field VersionID
-
-MyObject,
-       \\min-fields 5
-  A1,  \\field Name
-       \\required-field
-  A2,  \\field Zone Name
-       \\required-field
-  N1,  \\field A
-       \\required-field
-       \\units m
-  N2,  \\field B
-       \\required-field
-  N3;  \\field C
-       \\default 0.8
-       \\required-field
-        """
+        idd_string = \
+            r"!IDD_Version 13.9.0" + "\n" \
+            r"!IDD_BUILD abcdef1018" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"Version," + "\n" \
+            r"  A1;  \field VersionID" + "\n" \
+            r"" + "\n" \
+            r"MyObject," + "\n" \
+            r"       \min-fields 5" + "\n" \
+            r"  A1,  \field Name" + "\n" \
+            r"       \required-field" + "\n" \
+            r"  A2,  \field Zone Name" + "\n" \
+            r"       \required-field" + "\n" \
+            r"  N1,  \field A" + "\n" \
+            r"       \required-field" + "\n" \
+            r"       \units m" + "\n" \
+            r"  N2,  \field B" + "\n" \
+            r"       \required-field" + "\n" \
+            r"  N3;  \field C" + "\n" \
+            r"       \default 0.8" + "\n" \
+            r"       \required-field" + "\n"
         self.idd_structure = IDDProcessor().process_file_via_string(idd_string)
         self.idd_object = self.idd_structure.get_object_by_type('MyObject')
 
     def test_valid_fully_populated_idf_object(self):
-        idf_string = """
-Version,12.9;
-MyObject,Name,ZoneName,1,2,3;"""
+        idf_string = \
+            r"Version,12.9;" + "\n" \
+            r"MyObject,Name,ZoneName,1,2,3;" + "\n"
         idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('MyObject')[0]
         issues = idf_object.validate(self.idd_object)
         self.assertEqual(len(issues), 0)
 
     def test_valid_defaulted_missing_idf_object(self):
-        idf_string = """
-Version,12.9;
-MyObject,Name,ZoneName,1,2;"""
+        idf_string = \
+            r"Version,12.9;" + "\n" \
+            r"MyObject,Name,ZoneName,1,2;" + "\n"
         idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('MyObject')[0]
         issues = idf_object.validate(self.idd_object)
         self.assertEqual(len(issues), 0)
 
     def test_valid_defaulted_blank_idf_object(self):
-        idf_string = """
-Version,12.9;
-MyObject,Name,ZoneName,1,2,;"""
+        idf_string = \
+            r"Version,12.9;" + "\n" \
+            r"MyObject,Name,ZoneName,1,2,;" + "\n"
         idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('MyObject')[0]
         issues = idf_object.validate(self.idd_object)
         self.assertEqual(len(issues), 0)
 
     def test_invalid_idf_object_required_field_no_default(self):
-        idf_string = """
-Version,12.9;
-MyObject,Name,ZoneName,1;"""
+        idf_string = \
+            r"Version,12.9;" + "\n" \
+            r"MyObject,Name,ZoneName,1;" + "\n"
         idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('MyObject')[0]
         issues = idf_object.validate(self.idd_object)
         self.assertEqual(len(issues), 2)
 
     def test_units_are_persisted_when_writing(self):
-        idf_string = """
-Version,12.9;
-MyObject,Name,ZoneName,1,2,3;"""
+        idf_string = \
+            r"Version,12.9;" + "\n" \
+            r"MyObject,Name,ZoneName,1,2,3;" + "\n"
         idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('MyObject')[0]
         issues = idf_object.validate(self.idd_object)
         self.assertEqual(len(issues), 0)
@@ -274,35 +268,34 @@ MyObject,Name,ZoneName,1,2,3;"""
 class TestWritingWholeIDF(unittest.TestCase):
 
     def setUp(self):
-        idd_string = """
-    !IDD_Version 13.9.0
-    !IDD_BUILD abcdef1018
-    \group MyGroup
-    Version,
-      A1;  \\field VersionID
-
-    MyObject,
-           \\min-fields 5
-      A1,  \\field Name
-           \\required-field
-      A2,  \\field Zone Name
-           \\required-field
-      N1,  \\field A
-           \\required-field
-           \\units m
-      N2,  \\field B
-           \\required-field
-      N3;  \\field C
-           \\default 0.8
-           \\required-field
-            """
+        idd_string = \
+            r"!IDD_Version 13.9.0" + "\n" \
+            r"!IDD_BUILD abcdef1018" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"Version," + "\n" \
+            r"  A1;  \field VersionID" + "\n" \
+            r"" + "\n" \
+            r"MyObject," + "\n" \
+            r"       \min-fields 5" + "\n" \
+            r"  A1,  \field Name" + "\n" \
+            r"       \required-field" + "\n" \
+            r"  A2,  \field Zone Name" + "\n" \
+            r"       \required-field" + "\n" \
+            r"  N1,  \field A" + "\n" \
+            r"       \required-field" + "\n" \
+            r"       \units m" + "\n" \
+            r"  N2,  \field B" + "\n" \
+            r"       \required-field" + "\n" \
+            r"  N3;  \field C" + "\n" \
+            r"       \default 0.8" + "\n" \
+            r"       \required-field" + "\n"
         self.idd_structure = IDDProcessor().process_file_via_string(idd_string)
         self.idd_object = self.idd_structure.get_object_by_type('MyObject')
 
     def test_units_are_persisted_when_writing(self):
-        idf_string = """
-Version,12.9;
-MyObject,Name,ZoneName,1,2,3;"""
+        idf_string = \
+            r"Version,12.9;" + "\n" \
+            r"MyObject,Name,ZoneName,1,2,3;" + "\n"
         idf_structure = IDFProcessor().process_file_via_string(idf_string)
         issues = idf_structure.validate(self.idd_structure)
         self.assertEqual(len(issues), 0)
@@ -313,21 +306,20 @@ MyObject,Name,ZoneName,1,2,3;"""
 
 class TestIDFStructureValidation(unittest.TestCase):
     def setUp(self):
-        idd_string = """
-!IDD_Version 8.1.0
-!IDD_BUILD abcdef1011
-\group MyGroup
-Version,
-  A1;  \\field VersionID
-
-ObjectU,
-  \\unique-object
-  \\required-object
-  N1;  \\field NumericFieldA
-
-OtherObject,
-  N1;  \\field Again
-        """
+        idd_string = \
+            r"!IDD_Version 8.1.0" + "\n" \
+            r"!IDD_BUILD abcdef1011" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"Version," + "\n" \
+            r"  A1;  \field VersionID" + "\n" \
+            r"" + "\n" \
+            r"ObjectU," + "\n" \
+            r"  \unique-object" + "\n" \
+            r"  \required-object" + "\n" \
+            r"  N1;  \field NumericFieldA" + "\n" \
+            r"" + "\n" \
+            r"OtherObject," + "\n" \
+            r"  N1;  \field Again" + "\n"
         self.idd_structure = IDDProcessor().process_file_via_string(idd_string)
 
     def test_valid_object(self):
@@ -349,14 +341,14 @@ OtherObject,
         self.assertEqual(len(issues), 1)
 
     def test_single_line_validation(self):
-        idd_string = """
-        !IDD_Version 56.1.0
-        !IDD_BUILD abcdef1011
-        \group MyGroup
-        Version,
-        A1; \\field VersionID
-
-        Object;"""
+        idd_string = \
+            r"!IDD_Version 56.1.0" + "\n" \
+            r"!IDD_BUILD abcdef1011" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"Version," + "\n" \
+            r"A1; \field VersionID" + "\n" \
+            r"" + "\n" \
+            r"Object;" + "\n"
         idd_object = IDDProcessor().process_file_via_string(idd_string).get_object_by_type('Object')
         idf_string = "Version,23.1;Object;"
         idf_object = IDFProcessor().process_file_via_string(idf_string).get_idf_objects_by_type('Object')[0]
@@ -366,16 +358,15 @@ OtherObject,
 
 class TestGlobalSwap(unittest.TestCase):
     def setUp(self):
-        idd_string = """
-    !IDD_Version 87.11.0
-    !IDD_BUILD abcdef1011
-    \group MyGroup
-    Version,
-      A1;  \\field VersionID
-
-    ObjectU,
-      A1;  \\field My field name
-            """
+        idd_string = \
+            r"!IDD_Version 87.11.0" + "\n" \
+            r"!IDD_BUILD abcdef1011" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"Version," + "\n" \
+            r"   A1;  \field VersionID" + "\n" \
+            r"" + "\n" \
+            r"ObjectU," + "\n" \
+            r"   A1;  \field My field name" + "\n"
         self.idd_structure = IDDProcessor().process_file_via_string(idd_string)
 
     def test_swapping(self):
@@ -386,15 +377,14 @@ class TestGlobalSwap(unittest.TestCase):
         self.assertIn("MySecondKey", idf_object.fields)
 
     def test_swapping_including_comment(self):
-        idf_string = """
-        Version,
-         87.11;
-        ObjectU,
-         MyFirstKey;
-        ! Comments here
-        ObjectU,
-         NotMyFirstKey;
-        """
+        idf_string = \
+            r"Version," + "\n" \
+            r" 87.11;" + "\n" \
+            r"ObjectU," + "\n" \
+            r" MyFirstKey;" + "\n" \
+            r"! Comments here" + "\n" \
+            r"ObjectU," + "\n" \
+            r" NotMyFirstKey;" + "\n"
         idf_structure = IDFProcessor().process_file_via_string(idf_string)
         idf_structure.global_swap({"MyFirstKey": "MySecondKey"})
         idf_object = idf_structure.get_idf_objects_by_type("ObjectU")[0]

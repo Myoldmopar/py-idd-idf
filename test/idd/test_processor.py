@@ -1,15 +1,11 @@
 import os
 import sys
+from six import StringIO
 from unittest import TestCase, skipIf
 
 from pyiddidf import settings
 from pyiddidf.exceptions import ProcessingException
 from pyiddidf.idd_processor import IDDProcessor
-
-if sys.version_info > (3, 0):
-    from io import StringIO as IOStr
-else:
-    from StringIO import StringIO as IOStr
 
 
 class TestIDDProcessingViaStream(TestCase):
@@ -28,7 +24,7 @@ class TestIDDProcessingViaStream(TestCase):
             r"\default 8.6" + "\n" \
             r""
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(IOStr(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
@@ -41,10 +37,10 @@ class TestIDDProcessingViaStream(TestCase):
             r"      \memo Specifies the EnergyPlus version of the IDF file." + "\n" \
             r"      \unique-object" + "\n" \
             r"      \format singleLine" + "\n" \
-            r"  A1 ; \field Version Identifier" + "\n" \
+            r"  A1; \field Version Identifier" + "\n" \
             r"      \default 8.6" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(IOStr(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
@@ -63,7 +59,7 @@ class TestIDDProcessingViaStream(TestCase):
             r"      \default 8.6" + "\n" \
             r"" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(IOStr(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("version")
@@ -81,23 +77,23 @@ class TestIDDProcessingViaStream(TestCase):
             r"       \reference-class-name validBranchEquipmentTypes" + "\n" \
             r"       \reference validBranchEquipmentNames" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(IOStr(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("NewObject")
         self.assertEquals(1, len(version_obj.fields))
 
-    # def test_single_line_obj_lookup(self):
-    #     idd_object = \
-    #         r"!IDD_Version 1.2.0" + "\n" \
-    #         r"!IDD_BUILD abcdef0011" + "\n" \
-    #         r"Simulation Input;" + "\n" \
-    #         r"\group Stuff" + "\n" \
-    #         r"Version,A1;" + "\n"
-    #     processor = IDDProcessor()
-    #     ret_value = processor.process_file_via_stream(IOStr(idd_object))
-    #     bad_obj = ret_value.get_object_by_type("simulation input")
-    #     self.assertTrue(bad_obj)
+    def test_single_line_obj_lookup(self):
+        idd_object = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"!IDD_BUILD sdkfj30934" + "\n" \
+            r"Simulation Input;" + "\n" \
+            r"\group Stuff" + "\n" \
+            r"Version,A1;" + "\n"
+        processor = IDDProcessor()
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
+        bad_obj = ret_value.get_object_by_type("simulation input")
+        self.assertTrue(bad_obj)
 
     def test_invalid_idd_obj_lookup(self):
         idd_object = \
@@ -106,7 +102,7 @@ class TestIDDProcessingViaStream(TestCase):
             r"\group Stuff" + "\n" \
             r"Version,A1;" + "\n"
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(IOStr(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         bad_obj = ret_value.get_object_by_type("noObjecT")
         self.assertIsNone(bad_obj)
 
@@ -118,63 +114,58 @@ class TestIDDProcessingViaStream(TestCase):
             r"MyObject," + "\n" \
             r"  N1,  \field NumericFieldA" + "\n" \
             r"  N2;  \field NumericFieldB" + "\n" \
-            r"       \autosizabled"
+            r"       \autosizabled" + "\n"
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string).get_object_by_type('MyObject')
 
     def test_invalid_idd_metadata(self):
-        idd_string = """
-        !IDD_Version 1.2.0
-        !IDD_BUILD abcdef0110
-        \group MyGroup
-        MyObject,
-          N1,  \\field NumericFieldA
-          N2;  \\field NumericFieldB
-               \\autosizQble
-                """
+        idd_string = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"!IDD_BUILD abcdef0110" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"MyObject," + "\n" \
+            r"  N1,  \field NumericFieldA" + "\n" \
+            r"  N2;  \field NumericFieldB" + "\n" \
+            r"       \autosizQble" + "\n"
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string).get_object_by_type('MyObject')
 
     def test_missing_version(self):
-        idd_string = """
-        !IDD_BUILD abcdef0111
-        \group MyGroup
-        MyObject,
-          N1;  \\field NumericFieldA
-        """
+        idd_string = \
+            r"!IDD_BUILD abcdef0111" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"MyObject," + "\n" \
+            r"  N1;  \field NumericFieldA" + "\n"
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string)
 
     def test_missing_build(self):
-        idd_string = """
-        !IDD_Version 1.2.0
-        \group MyGroup
-        MyObject,
-          N1;  \\field NumericFieldA
-        """
+        idd_string = \
+            r"!IDD_Version 1.2.0" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"MyObject," + "\n" \
+            r"  N1;  \field NumericFieldA" + "\n"
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string)
 
     def test_non_numeric_version(self):
-        idd_string = """
-        !IDD_Version X.Y.Z
-        !IDD_BUILD abcdef1000
-        \group MyGroup
-        MyObject,
-          N1;  \\field NumericFieldA
-        """
+        idd_string = \
+            r"!IDD_Version X.Y.Z" + "\n" \
+            r"!IDD_BUILD abcdef1000" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"MyObject," + "\n" \
+            r"  N1;  \field NumericFieldA" + "\n"
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string)
 
     def test_bad_non_numeric_metadata(self):
-        idd_string = """
-        !IDD_Version 122.6.0
-        !IDD_BUILD abcdef1000
-        \group MyGroup
-        MyObject,
-          \\min-fields Q
-          N1;  \\field NumericFieldA
-        """
+        idd_string = \
+            r"!IDD_Version 122.6.0" + "\n" \
+            r"!IDD_BUILD abcdef1000" + "\n" \
+            r"\group MyGroup" + "\n" \
+            r"MyObject," + "\n" \
+            r"  \min-fields Q" + "\n" \
+            r"  N1;  \field NumericFieldA" + "\n"
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string)
 
