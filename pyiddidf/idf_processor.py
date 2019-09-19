@@ -1,11 +1,15 @@
 import codecs
 import logging
 import os
-
-from six import StringIO
+import sys
 
 from pyiddidf import exceptions
 from pyiddidf.idf_objects import IDFObject, IDFStructure
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 
@@ -201,4 +205,8 @@ class IDFProcessor:
                     "Found IDF version, but could not coerce into floating point representation")
         else:
             self.idf.version_float = 0.0
+
+        # close the file stream
+        self.input_file_stream.close()
+
         return self.idf

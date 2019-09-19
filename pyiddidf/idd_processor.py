@@ -1,11 +1,15 @@
 import codecs
 import logging
 import os
-
-from six import StringIO
+import sys
 
 from pyiddidf import exceptions
 from pyiddidf.idd_objects import IDDField, IDDObject, IDDStructure, IDDGroup
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 
@@ -464,6 +468,9 @@ class IDDProcessor:
         if magic_cache_key:
             IDD_CACHE[magic_cache_key] = self.idd
             module_logger.debug("Storing this IDD in cache with key: {}".format(magic_cache_key))
+
+        # close file stream
+        self.idd_file_stream.close()
 
         # and return the magically useful IDDStructure instance
         return self.idd

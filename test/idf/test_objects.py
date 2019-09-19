@@ -1,18 +1,22 @@
+import sys
 import unittest
-
-from six import StringIO
 
 from pyiddidf.idd_processor import IDDProcessor
 from pyiddidf.idf_objects import IDFObject, ValidationIssue
 from pyiddidf.idf_processor import IDFProcessor
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 
 class TestIDFObject(unittest.TestCase):
     def test_valid_object(self):
         tokens = ["Objecttype", "object_name", "something", "", "last field with space"]
         obj = IDFObject(tokens)
-        self.assertEquals("Objecttype", obj.object_name)
-        self.assertEquals(4, len(obj.fields))
+        self.assertEqual("Objecttype", obj.object_name)
+        self.assertEqual(4, len(obj.fields))
         obj.object_string()
         s = StringIO()
         obj.write_object(s)
@@ -25,7 +29,7 @@ class TestIDFObject(unittest.TestCase):
         self.assertEqual(expected_string.replace('%20', ' '), s.getvalue())
         tokens = ["Objecttypenofields"]
         obj = IDFObject(tokens)
-        self.assertEquals("Objecttypenofields", obj.object_name)
+        self.assertEqual("Objecttypenofields", obj.object_name)
         obj.object_string()
         obj.write_object(s)
 
@@ -34,10 +38,10 @@ class TestSingleLineIDFValidation(unittest.TestCase):
     def test_valid_single_token_object_no_idd(self):
         tokens = ["SingleLineObject"]
         obj = IDFObject(tokens)
-        self.assertEquals("SingleLineObject", obj.object_name)
-        self.assertEquals(0, len(obj.fields))
+        self.assertEqual("SingleLineObject", obj.object_name)
+        self.assertEqual(0, len(obj.fields))
         s = obj.object_string()
-        self.assertEquals("SingleLineObject;\n", s)
+        self.assertEqual("SingleLineObject;\n", s)
 
     def test_valid_single_token_object_with_idd(self):
         idd_string = \
@@ -48,10 +52,10 @@ class TestSingleLineIDFValidation(unittest.TestCase):
         idd_object = IDDProcessor().process_file_via_string(idd_string).get_object_by_type('SingleLineObject')
         tokens = ["SingleLineObject"]
         obj = IDFObject(tokens)
-        self.assertEquals("SingleLineObject", obj.object_name)
-        self.assertEquals(0, len(obj.fields))
+        self.assertEqual("SingleLineObject", obj.object_name)
+        self.assertEqual(0, len(obj.fields))
         s = obj.object_string(idd_object)
-        self.assertEquals("SingleLineObject;\n", s)
+        self.assertEqual("SingleLineObject;\n", s)
 
 
 class TestIDFFieldValidation(unittest.TestCase):

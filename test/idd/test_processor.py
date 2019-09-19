@@ -1,11 +1,15 @@
 import os
 import sys
-from six import StringIO
 from unittest import TestCase, skipIf
 
 from pyiddidf import settings
 from pyiddidf.exceptions import ProcessingException
 from pyiddidf.idd_processor import IDDProcessor
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 
 class TestIDDProcessingViaStream(TestCase):
@@ -25,8 +29,8 @@ class TestIDDProcessingViaStream(TestCase):
             r""
         processor = IDDProcessor()
         ret_value = processor.process_file_via_stream(StringIO(idd_object))
-        self.assertEquals(1, len(ret_value.groups))
-        self.assertEquals(1, len(ret_value.groups[0].objects))
+        self.assertEqual(1, len(ret_value.groups))
+        self.assertEqual(1, len(ret_value.groups[0].objects))
 
     def test_proper_idd_indented(self):
         idd_object = \
@@ -41,8 +45,8 @@ class TestIDDProcessingViaStream(TestCase):
             r"      \default 8.6" + "\n"
         processor = IDDProcessor()
         ret_value = processor.process_file_via_stream(StringIO(idd_object))
-        self.assertEquals(1, len(ret_value.groups))
-        self.assertEquals(1, len(ret_value.groups[0].objects))
+        self.assertEqual(1, len(ret_value.groups))
+        self.assertEqual(1, len(ret_value.groups[0].objects))
 
     def test_repeated_object_meta_idd(self):
         idd_object = \
@@ -60,10 +64,10 @@ class TestIDDProcessingViaStream(TestCase):
             r"" + "\n"
         processor = IDDProcessor()
         ret_value = processor.process_file_via_stream(StringIO(idd_object))
-        self.assertEquals(1, len(ret_value.groups))
-        self.assertEquals(1, len(ret_value.groups[0].objects))
+        self.assertEqual(1, len(ret_value.groups))
+        self.assertEqual(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("version")
-        self.assertEquals(1, len(version_obj.fields))
+        self.assertEqual(1, len(version_obj.fields))
 
     def test_new_reference_class_name(self):
         idd_object = \
@@ -78,10 +82,10 @@ class TestIDDProcessingViaStream(TestCase):
             r"       \reference validBranchEquipmentNames" + "\n"
         processor = IDDProcessor()
         ret_value = processor.process_file_via_stream(StringIO(idd_object))
-        self.assertEquals(1, len(ret_value.groups))
-        self.assertEquals(1, len(ret_value.groups[0].objects))
+        self.assertEqual(1, len(ret_value.groups))
+        self.assertEqual(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("NewObject")
-        self.assertEquals(1, len(version_obj.fields))
+        self.assertEqual(1, len(version_obj.fields))
 
     def test_single_line_obj_lookup(self):
         idd_object = \
@@ -177,4 +181,4 @@ class TestIDDProcessingViaFile(TestCase):
         idd_path = os.path.join(cur_dir, "..", "support_files", "Energy+.idd")
         processor = IDDProcessor()
         ret_value = processor.process_file_given_file_path(idd_path)
-        self.assertEquals(57, len(ret_value.groups))
+        self.assertEqual(57, len(ret_value.groups))
