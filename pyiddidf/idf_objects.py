@@ -1,4 +1,4 @@
-import io
+import codecs
 import logging
 
 module_logger = logging.getLogger("eptransition.idd.processor")
@@ -294,7 +294,7 @@ class IDFStructure(object):
         :param IDDStructure idd_structure: An optional IDDStructure instance representing an entire IDD file
         :return: None
         """
-        with io.open(idf_path, "w", encoding='UTF-8') as f:
+        with codecs.open(idf_path, "w", encoding='UTF-8') as f:
             f.write(self.whole_idf_string(idd_structure))
         return None
 

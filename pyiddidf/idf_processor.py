@@ -1,4 +1,4 @@
-import io
+import codecs
 import logging
 import os
 
@@ -36,7 +36,7 @@ class IDFProcessor:
         """
         if not os.path.exists(file_path):
             raise exceptions.ProcessingException("Input file not found=\"" + file_path + "\"")
-        self.input_file_stream = io.open(file_path, "r", errors='ignore', encoding='UTF-8')
+        self.input_file_stream = codecs.open(file_path, encoding='utf-8', errors='ignore')
         self.file_path = file_path
         return self.process_file()
 
