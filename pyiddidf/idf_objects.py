@@ -1,3 +1,4 @@
+import codecs
 import logging
 
 module_logger = logging.getLogger("eptransition.idd.processor")
@@ -293,7 +294,7 @@ class IDFStructure(object):
         :param IDDStructure idd_structure: An optional IDDStructure instance representing an entire IDD file
         :return: None
         """
-        with open(idf_path, "w") as f:
+        with codecs.open(idf_path, "w", encoding='UTF-8') as f:
             f.write(self.whole_idf_string(idd_structure))
         return None
 
@@ -329,7 +330,7 @@ class IDFStructure(object):
 
     def global_swap(self, dict_of_swaps):
         upper_case_swaps = {}
-        for k, v in dict_of_swaps.iteritems():
+        for k, v in dict_of_swaps.items():
             upper_case_swaps[k.upper()] = v
         for idf_object in self.objects:
             if idf_object.comment:

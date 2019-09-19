@@ -2,10 +2,10 @@
 
 import codecs
 import os
+
 import setuptools
 
 from pyiddidf import __version__
-
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(this_dir, 'README.rst'), encoding='utf-8') as i_file:

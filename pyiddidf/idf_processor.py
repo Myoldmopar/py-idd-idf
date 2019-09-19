@@ -1,9 +1,15 @@
-import StringIO
+import codecs
 import logging
 import os
+import sys
 
 from pyiddidf import exceptions
 from pyiddidf.idf_objects import IDFObject, IDFStructure
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 
@@ -34,7 +40,7 @@ class IDFProcessor:
         """
         if not os.path.exists(file_path):
             raise exceptions.ProcessingException("Input file not found=\"" + file_path + "\"")
-        self.input_file_stream = open(file_path, "r")
+        self.input_file_stream = codecs.open(file_path, encoding='utf-8', errors='ignore')
         self.file_path = file_path
         return self.process_file()
 
@@ -59,7 +65,7 @@ class IDFProcessor:
         :param str idf_string: An IDF snippet string
         :return: An IDFStructure instance created from processing the IDF string
         """
-        self.input_file_stream = StringIO.StringIO(idf_string)
+        self.input_file_stream = StringIO(idf_string)
         self.file_path = "/string/idf/snippet"
         return self.process_file()
 
@@ -112,7 +118,7 @@ class IDFProcessor:
                     # then this blob is fresh and is the start of a new object, but it could also be the end (one-liner)
                     current_blob = Blob(Blob.OBJECT)
                     actual_line = line_text
-                    if "!" in line_text >= 0:
+                    if line_text.count("!") > 0:
                         actual_line = line_text[:line_text.find("!")]
                     if ";" in actual_line:
                         # we end this object blob
@@ -125,7 +131,7 @@ class IDFProcessor:
                     # then we should append this line to the current blob, but we also need to check if it is the end
                     current_blob.lines.append(line_text)
                     actual_line = line_text
-                    if "!" in line_text >= 0:
+                    if line_text.count("!") > 0:
                         actual_line = line_text[:line_text.find("!")]
                     if ";" in actual_line:
                         # we end this object blob
@@ -137,7 +143,7 @@ class IDFProcessor:
                     current_blob = Blob(Blob.OBJECT)
                     current_blob.lines.append(line_text)
                     actual_line = line_text
-                    if "!" in line_text >= 0:
+                    if line_text.count("!") > 0:
                         actual_line = line_text[:line_text.find("!")]
                     if ";" in actual_line:
                         # we end this object blob
@@ -199,4 +205,8 @@ class IDFProcessor:
                     "Found IDF version, but could not coerce into floating point representation")
         else:
             self.idf.version_float = 0.0
+
+        # close the file stream
+        self.input_file_stream.close()
+
         return self.idf

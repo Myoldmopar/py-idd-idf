@@ -1,9 +1,15 @@
-import StringIO
+import codecs
 import logging
 import os
+import sys
 
 from pyiddidf import exceptions
 from pyiddidf.idd_objects import IDDField, IDDObject, IDDStructure, IDDGroup
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from StringIO import StringIO
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 
@@ -64,7 +70,7 @@ class IDDProcessor:
         """
         if not os.path.exists(file_path):
             raise exceptions.ProcessingException("Input IDD file not found=\"" + file_path + "\"")  # pragma: no cover
-        self.idd_file_stream = open(file_path, "rb")
+        self.idd_file_stream = codecs.open(file_path, encoding='utf-8', errors='ignore')
         self.file_path = file_path
         return self.process_file()
 
@@ -89,7 +95,7 @@ class IDDProcessor:
         :param str idd_string: An IDD snippet string
         :return: An IDDStructure instance created from processing the IDD string
         """
-        self.idd_file_stream = StringIO.StringIO(idd_string)
+        self.idd_file_stream = StringIO(idd_string)
         self.file_path = "/string/idd/snippet"
         return self.process_file()
 
@@ -462,6 +468,9 @@ class IDDProcessor:
         if magic_cache_key:
             IDD_CACHE[magic_cache_key] = self.idd
             module_logger.debug("Storing this IDD in cache with key: {}".format(magic_cache_key))
+
+        # close file stream
+        self.idd_file_stream.close()
 
         # and return the magically useful IDDStructure instance
         return self.idd
