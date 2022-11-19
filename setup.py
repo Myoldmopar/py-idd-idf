@@ -12,7 +12,7 @@ with codecs.open(os.path.join(this_dir, 'README.rst'), encoding='utf-8') as i_fi
     long_description = i_file.read()
 
 setuptools.setup(
-    name='energyplus_idd_utilifies',
+    name='energyplus_idd_idf_utilities',
     version=__version__,
     packages=['pyiddidf'],
     description='EnergyPlus idd/idf manipulation in Python.',
