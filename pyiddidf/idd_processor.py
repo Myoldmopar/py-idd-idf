@@ -21,7 +21,7 @@ class CurrentReadType:
     ReadingObjectMetaDataContents = 6
     ReadingFieldANValue = 7
     ReadingFieldMetaData = 8
-    ReadingFieldMetaDataOrNextANValue = 9
+    ReadingFieldMetaDataOrNextANValueOrNextObject = 9
     LookingForFieldMetaDataOrNextObject = 10
     LookingForFieldMetaDataOrNextField = 11
 
@@ -345,14 +345,14 @@ class IDDProcessor:
                         last_field_for_object = False
                     elif peeked_char == ";":
                         last_field_for_object = True
-                    read_status = CurrentReadType.ReadingFieldMetaDataOrNextANValue
+                    read_status = CurrentReadType.ReadingFieldMetaDataOrNextANValueOrNextObject
                 elif peeked_char == "\n":  # pragma: no cover
                     raise exceptions.ProcessingException(
                         "Blank or erroneous ""AN"" field index value",
                         line_index=line_index,
                         object_name=cur_object.name)
 
-            elif read_status == CurrentReadType.ReadingFieldMetaDataOrNextANValue:
+            elif read_status == CurrentReadType.ReadingFieldMetaDataOrNextANValueOrNextObject:
 
                 if peeked_char == "\\":
                     token_builder = ""
@@ -364,12 +364,14 @@ class IDDProcessor:
                         cur_field.field_name = ""
                     cur_object.fields.append(cur_field)
                     read_status = CurrentReadType.ReadingFieldANValue
-                elif just_read_char == ';' and peeked_char == '\n':
+                # If we hit a newline while searching here, we are moving onto the next object
+                elif peeked_char == '\n':
                     token_builder = ""
                     # this is hit when we end an object when an "AN" declaration and nothing after it
                     if cur_field.field_name is None:
                         cur_field.field_name = ""
                     cur_object.fields.append(cur_field)
+                    cur_group.objects.append(cur_object)
                     read_status = CurrentReadType.ReadAnything
 
             elif read_status == CurrentReadType.ReadingFieldMetaData:

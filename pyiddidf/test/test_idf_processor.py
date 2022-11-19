@@ -108,7 +108,7 @@ class TestIDFProcessingViaFile(unittest.TestCase):
 
     def setUp(self):
         cur_dir = os.path.dirname(os.path.realpath(__file__))
-        self.support_file_dir = os.path.join(cur_dir, "..", "support_files")
+        self.support_file_dir = os.path.join(cur_dir, "", "support_files")
 
     def test_valid_idf_file_simple(self):
         idf_path = os.path.join(self.support_file_dir, "1ZoneEvapCooler.idf")

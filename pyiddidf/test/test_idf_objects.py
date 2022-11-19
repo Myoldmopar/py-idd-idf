@@ -27,6 +27,7 @@ class TestIDFObject(unittest.TestCase):
         self.assertEquals("Objecttypenofields", obj.object_name)
         obj.object_string()
         obj.write_object(s)
+        self.assertIsInstance(str(obj), str)
 
 
 class TestSingleLineIDFValidation(unittest.TestCase):

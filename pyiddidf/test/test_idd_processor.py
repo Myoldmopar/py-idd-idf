@@ -180,12 +180,33 @@ Version,A1;
         with self.assertRaises(ProcessingException):
             IDDProcessor().process_file_via_string(idd_string)
 
+    def test_trailing_an_value(self):
+        idd_object = """
+    !IDD_Version 1.2.8
+    !IDD_BUILD abcdef1001
+    \\group Simulation Parameters
+
+    Version,
+          \\memo Specifies the EnergyPlus version of the IDF file.
+          \\unique-object
+          \\format singleLine
+      A1 ; 
+
+    MyObject,
+          \\min-fields 1
+          N1;
+    """
+        processor = IDDProcessor()
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
+        self.assertEquals(1, len(ret_value.groups))
+        self.assertEquals(2, len(ret_value.groups[0].objects))
+
 
 class TestIDDProcessingViaFile(TestCase):
     @skipIf(not settings.run_large_tests, "This is a large test that reads the entire idd")
     def test_valid_idd(self):  # pragma: no cover
         cur_dir = os.path.dirname(os.path.realpath(__file__))
-        idd_path = os.path.join(cur_dir, "..", "support_files", "Energy+.idd")
+        idd_path = os.path.join(cur_dir, "", "support_files", "Energy+.idd")
         processor = IDDProcessor()
         ret_value = processor.process_file_given_file_path(idd_path)
         self.assertEquals(57, len(ret_value.groups))
