@@ -75,6 +75,9 @@ class IDFObject(object):
             self.object_name = tokens[0]
             self.fields = tokens[1:]
 
+    def __str__(self) -> str:
+        return f"{self.object_name} : {len(self.fields)} fields"
+
     def object_string(self, idd_object=None):
         """
         This function creates an intelligently formed IDF object.  If the current instance is comment data, it simply
@@ -329,7 +332,7 @@ class IDFStructure(object):
 
     def global_swap(self, dict_of_swaps):
         upper_case_swaps = {}
-        for k, v in dict_of_swaps.iteritems():
+        for k, v in dict_of_swaps.items():
             upper_case_swaps[k.upper()] = v
         for idf_object in self.objects:
             if idf_object.comment:

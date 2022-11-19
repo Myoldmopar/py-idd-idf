@@ -1,4 +1,4 @@
-import StringIO
+from io import StringIO
 import logging
 import os
 
@@ -89,11 +89,11 @@ class IDDProcessor:
         :param str idd_string: An IDD snippet string
         :return: An IDDStructure instance created from processing the IDD string
         """
-        self.idd_file_stream = StringIO.StringIO(idd_string)
+        self.idd_file_stream = StringIO(idd_string)
         self.file_path = "/string/idd/snippet"
         return self.process_file()
 
-    def peek_one_char(self):
+    def peek_one_char(self) -> str:
         """
         Internal worker function that reads a single character from the internal IDD stream but resets the stream to
         the former position
@@ -102,18 +102,34 @@ class IDDProcessor:
         """
         pos = self.idd_file_stream.tell()
         c = self.idd_file_stream.read(1)
+        if isinstance(c, bytes):
+            try:
+                c = c.decode('utf-8', errors='strict')
+            except UnicodeDecodeError:
+                c = '‍'  # this should really only occur if the idd is weirdly, I struggled creating a test for it
+        elif isinstance(c, str):
+            c = c
+        # shouldn't be able to hit any other types... else: something
         if c == "":
             c = None
         self.idd_file_stream.seek(pos)
         return c
 
-    def read_one_char(self):
+    def read_one_char(self) -> str:
         """
         Internal worker function that reads a single character from the internal IDD stream, advancing the cursor.
 
         :return: A single character, the one immediately following the cursor, or None if it can't read.
         """
         c = self.idd_file_stream.read(1)
+        if isinstance(c, bytes):
+            try:
+                c = c.decode('utf-8', errors='strict')
+            except UnicodeDecodeError:
+                c = '‍'  # this should really only occur if the idd is weirdly, I struggled creating a test for it
+        elif isinstance(c, str):
+            c = c
+        # shouldn't be able to hit any other types... else: something
         if c == "":
             c = None
         return c
@@ -160,7 +176,7 @@ class IDDProcessor:
                 peeked_char = "\n"  # to simulate that the line ended
 
             # if we are on Windows, we may end up with "\r", so move the read and peeked characters forward once
-            if peeked_char == "\r":  # pragma no cover -- we don't unit test on windows, so this won't be caught
+            if peeked_char == "\r":  # pragma no cover -- we don't unit test on Windows, so this won't be caught
                 just_read_char = self.read_one_char()
                 peeked_char = self.peek_one_char()
                 if not peeked_char:
@@ -237,7 +253,7 @@ class IDDProcessor:
                 elif peeked_char == ";":
                     # since this whole object is a single line, we can just add it directly to the current group
                     object_title = token_builder
-                    # this is added to singleline objects because CurGroup isn't instantiated yet, should fix
+                    # this is added to single-line objects because CurGroup isn't instantiated yet, should fix
                     self.idd.single_line_objects.append(object_title.strip())
                     token_builder = ""  # to clear the builder
                     self.read_one_char()  # to clear the semicolon
@@ -283,7 +299,7 @@ class IDDProcessor:
                             cur_obj_meta_data_type = None
                             read_status = CurrentReadType.LookingForObjectMetaDataOrNextField
                         else:
-                            # these will have following data, just set the flag
+                            # these will have the following data, just set the flag
                             read_status = CurrentReadType.ReadingObjectMetaDataContents
                     else:  # pragma: no cover
                         # token_builder = ""
@@ -343,11 +359,18 @@ class IDDProcessor:
                     read_status = CurrentReadType.ReadingFieldMetaData
                 elif peeked_char in ["A", "N"]:
                     token_builder = ""
-                    # this is hit when we have an AN value right after a previous AN value, so no meta data is added
+                    # this is hit when we have an "AN" value right after a previous AN value, so no meta-data is added
                     if cur_field.field_name is None:
                         cur_field.field_name = ""
                     cur_object.fields.append(cur_field)
                     read_status = CurrentReadType.ReadingFieldANValue
+                elif just_read_char == ';' and peeked_char == '\n':
+                    token_builder = ""
+                    # this is hit when we end an object when an "AN" declaration and nothing after it
+                    if cur_field.field_name is None:
+                        cur_field.field_name = ""
+                    cur_object.fields.append(cur_field)
+                    read_status = CurrentReadType.ReadAnything
 
             elif read_status == CurrentReadType.ReadingFieldMetaData:
 

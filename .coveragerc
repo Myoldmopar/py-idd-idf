@@ -1,4 +1,7 @@
 [run]
+source = pyiddidf
+
+[report]
 omit =
         /usr/*
         .tox/*

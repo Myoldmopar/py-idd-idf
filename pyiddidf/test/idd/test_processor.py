@@ -1,4 +1,4 @@
-import StringIO
+from io import StringIO
 import os
 from unittest import TestCase, skipIf
 
@@ -17,13 +17,13 @@ class TestIDDProcessingViaStream(TestCase):
 Version,
       \\memo Specifies the EnergyPlus version of the IDF file.
       \\unique-object
-      \format singleLine
+      \\format singleLine
   A1 ; \\field Version Identifier
       \\default 8.6
 
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
@@ -36,12 +36,12 @@ Version,
     Version,
           \\memo Specifies the EnergyPlus version of the IDF file.
           \\unique-object
-          \format singleLine
+          \\format singleLine
       A1 ; \\field Version Identifier
           \\default 8.6
     """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
 
@@ -61,7 +61,7 @@ Version,
 
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("version")
@@ -80,7 +80,7 @@ NewObject,
        \\reference validBranchEquipmentNames
         """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         self.assertEquals(1, len(ret_value.groups))
         self.assertEquals(1, len(ret_value.groups[0].objects))
         version_obj = ret_value.get_object_by_type("NewObject")
@@ -95,7 +95,7 @@ Simulation Input;
 Version,A1;
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         bad_obj = ret_value.get_object_by_type("simulation input")
         self.assertTrue(bad_obj)
 
@@ -107,7 +107,7 @@ Version,A1;
 Version,A1;
 """
         processor = IDDProcessor()
-        ret_value = processor.process_file_via_stream(StringIO.StringIO(idd_object))
+        ret_value = processor.process_file_via_stream(StringIO(idd_object))
         bad_obj = ret_value.get_object_by_type("noObjecT")
         self.assertIsNone(bad_obj)
 
@@ -115,7 +115,7 @@ Version,A1;
         idd_string = """
         !IDD_Version 1.2.0
         !IDD_BUILD abcdef0101
-        \group MyGroup
+        \\group MyGroup
         MyObject,
           N1,  \\field NumericFieldA
           N2;  \\field NumericFieldB
@@ -128,7 +128,7 @@ Version,A1;
         idd_string = """
         !IDD_Version 1.2.0
         !IDD_BUILD abcdef0110
-        \group MyGroup
+        \\group MyGroup
         MyObject,
           N1,  \\field NumericFieldA
           N2;  \\field NumericFieldB
@@ -140,7 +140,7 @@ Version,A1;
     def test_missing_version(self):
         idd_string = """
         !IDD_BUILD abcdef0111
-        \group MyGroup
+        \\group MyGroup
         MyObject,
           N1;  \\field NumericFieldA
         """
@@ -150,7 +150,7 @@ Version,A1;
     def test_missing_build(self):
         idd_string = """
         !IDD_Version 1.2.0
-        \group MyGroup
+        \\group MyGroup
         MyObject,
           N1;  \\field NumericFieldA
         """
@@ -161,7 +161,7 @@ Version,A1;
         idd_string = """
         !IDD_Version X.Y.Z
         !IDD_BUILD abcdef1000
-        \group MyGroup
+        \\group MyGroup
         MyObject,
           N1;  \\field NumericFieldA
         """
@@ -172,7 +172,7 @@ Version,A1;
         idd_string = """
         !IDD_Version 122.6.0
         !IDD_BUILD abcdef1000
-        \group MyGroup
+        \\group MyGroup
         MyObject,
           \\min-fields Q
           N1;  \\field NumericFieldA

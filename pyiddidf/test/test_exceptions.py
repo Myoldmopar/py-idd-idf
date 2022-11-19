@@ -64,3 +64,6 @@ class TestProcessingException(unittest.TestCase):
 
     def test_return_type(self):
         self.assertTrue(isinstance(self.e.__str__(), str))
+
+    def test_no_line_index(self):
+        self.assertTrue(isinstance(str(ProcessingException("message")), str))

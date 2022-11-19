@@ -12,8 +12,9 @@ with codecs.open(os.path.join(this_dir, 'README.rst'), encoding='utf-8') as i_fi
     long_description = i_file.read()
 
 setuptools.setup(
-    name='pyiddidf',
+    name='energyplus_idd_utilifies',
     version=__version__,
+    packages=['pyiddidf'],
     description='EnergyPlus idd/idf manipulation in Python.',
     long_description=long_description,
     url='https://github.com/myoldmopar/py-idd-idf',
@@ -27,13 +28,6 @@ setuptools.setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
     ],
-    keywords='cli energyplus',
-    packages=setuptools.find_packages(exclude=['test', 'test.*', '.tox']),
-    include_package_data=True,
+    license='UnlicensedForNow',
     install_requires=[],
-    extras_require={
-        'test': ['coverage', 'unittest', 'coveralls'],
-    },
-    test_suite='nose.collector',
-    tests_require=['nose'],
 )

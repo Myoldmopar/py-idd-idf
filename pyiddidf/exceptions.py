@@ -100,4 +100,7 @@ class ProcessingException(Exception):
         self.line_index = line_index
 
     def __str__(self):
-        return "Processing Exception on line number {}; message: {}".format(self.line_index, self.message)
+        if self.line_index:
+            return "Processing Exception on line number {}; message: {}".format(self.line_index, self.message)
+        else:
+            return f"Processing Exception; message: {self.message}"
