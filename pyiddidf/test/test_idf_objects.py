@@ -302,7 +302,7 @@ MyObject,Name,ZoneName,1,2,3;"""
         issues = idf_structure.validate(self.idd_structure)
         self.assertEqual(len(issues), 0)
         import tempfile
-        file_object = tempfile.NamedTemporaryFile()
+        file_object = tempfile.NamedTemporaryFile(mode='w')
         idf_structure.write_idf(file_object.name, self.idd_structure)
 
 
