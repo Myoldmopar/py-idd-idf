@@ -8,7 +8,7 @@ from pyiddidf import __version__
 
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
-with codecs.open(os.path.join(this_dir, 'README.rst'), encoding='utf-8') as i_file:
+with codecs.open(os.path.join(this_dir, 'README.md'), encoding='utf-8') as i_file:
     long_description = i_file.read()
 
 setuptools.setup(
@@ -17,6 +17,7 @@ setuptools.setup(
     packages=['pyiddidf'],
     description='EnergyPlus idd/idf manipulation in Python.',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/myoldmopar/py-idd-idf',
     author='Edwin Lee',
     author_email='leeed2001@gmail.com',
@@ -30,4 +31,7 @@ setuptools.setup(
     ],
     license='UnlicensedForNow',
     install_requires=[],
+    entry_points={
+        'console_scripts': ['energyplus_idd_idf=pyiddidf.cli:main_cli']
+    }
 )
