@@ -98,6 +98,11 @@ class ProcessingException(Exception):
         super(ProcessingException, self).__init__(message)
         self.message = message
         self.line_index = line_index
+        self.object_name = object_name
 
     def __str__(self):
-        return "Processing Exception on line number {}; message: {}".format(self.line_index, self.message)
+        if self.line_index:
+            return f"Processing Exception on line number {self.line_index}; message: {self.message} (tentative object" \
+                   f" name: \"{self.object_name}\" "
+        else:
+            return f"Processing Exception; message: {self.message}"

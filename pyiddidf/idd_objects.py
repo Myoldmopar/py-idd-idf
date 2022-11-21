@@ -19,6 +19,9 @@ class IDDField:
         self.meta_data = {}
         self.field_name = None
 
+    def __str__(self):
+        return f"IDDField: {self.field_an_index} - {self.field_name}"
+
 
 class IDDObject:
     """
@@ -41,6 +44,9 @@ class IDDObject:
         self.meta_data = {}
         self.fields = []
 
+    def __str__(self):
+        return f"IDDObject: {self.name} - {len(self.fields)} fields"
+
 
 class IDDGroup:
     """
@@ -58,6 +64,9 @@ class IDDGroup:
     def __init__(self, name):
         self.name = name
         self.objects = []
+
+    def __str__(self):
+        return f"IDDGroup: {self.name} - {len(self.objects)} objects"
 
 
 class IDDStructure:

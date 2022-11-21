@@ -1,4 +1,5 @@
-import StringIO
+from io import StringIO
+import tempfile
 import unittest
 
 from pyiddidf.idd_processor import IDDProcessor
@@ -13,7 +14,7 @@ class TestIDFObject(unittest.TestCase):
         self.assertEquals("Objecttype", obj.object_name)
         self.assertEquals(4, len(obj.fields))
         obj.object_string()
-        s = StringIO.StringIO()
+        s = StringIO()
         obj.write_object(s)
         expected_string = """Objecttype,
   object_name,             !-%20
@@ -27,6 +28,7 @@ class TestIDFObject(unittest.TestCase):
         self.assertEquals("Objecttypenofields", obj.object_name)
         obj.object_string()
         obj.write_object(s)
+        self.assertIsInstance(str(obj), str)
 
 
 class TestSingleLineIDFValidation(unittest.TestCase):
@@ -42,7 +44,7 @@ class TestSingleLineIDFValidation(unittest.TestCase):
         idd_string = """
         !IDD_Version 1.2.0
         !IDD_BUILD abcdef1001
-        \group MyGroup
+        \\group MyGroup
         SingleLineObject;"""
         idd_object = IDDProcessor().process_file_via_string(idd_string).get_object_by_type('SingleLineObject')
         tokens = ["SingleLineObject"]
@@ -58,7 +60,7 @@ class TestIDFFieldValidation(unittest.TestCase):
         idd_string = """
 !IDD_Version 12.9.0
 !IDD_BUILD abcdef1010
-\group MyGroup
+\\group MyGroup
 Version,
   A1;  \\field VersionID
 
@@ -200,7 +202,7 @@ class TestIDFObjectValidation(unittest.TestCase):
         idd_string = """
 !IDD_Version 13.9.0
 !IDD_BUILD abcdef1018
-\group MyGroup
+\\group MyGroup
 Version,
   A1;  \\field VersionID
 
@@ -271,7 +273,7 @@ class TestWritingWholeIDF(unittest.TestCase):
         idd_string = """
     !IDD_Version 13.9.0
     !IDD_BUILD abcdef1018
-    \group MyGroup
+    \\group MyGroup
     Version,
       A1;  \\field VersionID
 
@@ -300,9 +302,8 @@ MyObject,Name,ZoneName,1,2,3;"""
         idf_structure = IDFProcessor().process_file_via_string(idf_string)
         issues = idf_structure.validate(self.idd_structure)
         self.assertEqual(len(issues), 0)
-        import tempfile
-        file_object = tempfile.NamedTemporaryFile()
-        idf_structure.write_idf(file_object.name, self.idd_structure)
+        _, path = tempfile.mkstemp()
+        idf_structure.write_idf(path, self.idd_structure)
 
 
 class TestIDFStructureValidation(unittest.TestCase):
@@ -310,7 +311,7 @@ class TestIDFStructureValidation(unittest.TestCase):
         idd_string = """
 !IDD_Version 8.1.0
 !IDD_BUILD abcdef1011
-\group MyGroup
+\\group MyGroup
 Version,
   A1;  \\field VersionID
 
@@ -346,7 +347,7 @@ OtherObject,
         idd_string = """
         !IDD_Version 56.1.0
         !IDD_BUILD abcdef1011
-        \group MyGroup
+        \\group MyGroup
         Version,
         A1; \\field VersionID
 
@@ -363,7 +364,7 @@ class TestGlobalSwap(unittest.TestCase):
         idd_string = """
     !IDD_Version 87.11.0
     !IDD_BUILD abcdef1011
-    \group MyGroup
+    \\group MyGroup
     Version,
       A1;  \\field VersionID
 

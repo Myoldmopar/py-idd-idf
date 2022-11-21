@@ -6,9 +6,9 @@ idd_processor = IDDProcessor().process_file_given_file_path(file_path)
 object_names = []
 first_letters = set()
 for group in idd_processor.groups:
-    for object in group.objects:
-        object_names.append(object.name)
-        first_letters.add(object.name[0].upper())
+    for _object in group.objects:
+        object_names.append(_object.name)
+        first_letters.add(_object.name[0].upper())
 found_letters_set = first_letters
 full_alphabet_set = set([chr(i).upper() for i in range(ord('a'), ord('z') + 1)])
 missing_letters = full_alphabet_set - found_letters_set

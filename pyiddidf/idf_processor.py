@@ -1,4 +1,4 @@
-import StringIO
+from io import StringIO
 import logging
 import os
 
@@ -59,7 +59,7 @@ class IDFProcessor:
         :param str idf_string: An IDF snippet string
         :return: An IDFStructure instance created from processing the IDF string
         """
-        self.input_file_stream = StringIO.StringIO(idf_string)
+        self.input_file_stream = StringIO(idf_string)
         self.file_path = "/string/idf/snippet"
         return self.process_file()
 
@@ -112,7 +112,7 @@ class IDFProcessor:
                     # then this blob is fresh and is the start of a new object, but it could also be the end (one-liner)
                     current_blob = Blob(Blob.OBJECT)
                     actual_line = line_text
-                    if "!" in line_text >= 0:
+                    if "!" in line_text:
                         actual_line = line_text[:line_text.find("!")]
                     if ";" in actual_line:
                         # we end this object blob
@@ -125,7 +125,7 @@ class IDFProcessor:
                     # then we should append this line to the current blob, but we also need to check if it is the end
                     current_blob.lines.append(line_text)
                     actual_line = line_text
-                    if "!" in line_text >= 0:
+                    if "!" in line_text:
                         actual_line = line_text[:line_text.find("!")]
                     if ";" in actual_line:
                         # we end this object blob
@@ -137,7 +137,7 @@ class IDFProcessor:
                     current_blob = Blob(Blob.OBJECT)
                     current_blob.lines.append(line_text)
                     actual_line = line_text
-                    if "!" in line_text >= 0:
+                    if "!" in line_text:
                         actual_line = line_text[:line_text.find("!")]
                     if ";" in actual_line:
                         # we end this object blob
@@ -165,10 +165,10 @@ class IDFProcessor:
                         if not this_line == "":
                             out_lines.append(this_line.strip())
                 # check these object lines for malformed idf syntax
-                for l in out_lines:
-                    if not (l.endswith(",") or l.endswith(";")):
+                for li in out_lines:
+                    if not (li.endswith(",") or li.endswith(";")):
                         raise exceptions.ProcessingException(
-                            "IDF line doesn't end with comma/semicolon\nline:\"" + l + "\"")
+                            "IDF line doesn't end with comma/semicolon\nline:\"" + li + "\"")
                 # intermediate: join entire array and re-split by semicolon
                 idf_data_joined = "".join(out_lines)
                 idf_object_strings = idf_data_joined.split(";")
