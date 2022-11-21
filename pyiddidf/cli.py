@@ -76,7 +76,7 @@ def main_cli() -> int:
             }
         }, indent=2))
     elif args.idd_obj_matches:
-        pattern = args.iddobjmatches
+        pattern = args.idd_obj_matches
         matching_objects = []
         for g in processor.idd.groups:
             for o in g.objects:
