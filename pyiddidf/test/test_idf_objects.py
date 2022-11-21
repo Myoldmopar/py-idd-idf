@@ -1,4 +1,5 @@
 from io import StringIO
+import tempfile
 import unittest
 
 from pyiddidf.idd_processor import IDDProcessor
@@ -301,9 +302,8 @@ MyObject,Name,ZoneName,1,2,3;"""
         idf_structure = IDFProcessor().process_file_via_string(idf_string)
         issues = idf_structure.validate(self.idd_structure)
         self.assertEqual(len(issues), 0)
-        import tempfile
-        file_object = tempfile.NamedTemporaryFile(mode='w')
-        idf_structure.write_idf(file_object.name, self.idd_structure)
+        _, path = tempfile.mkstemp()
+        idf_structure.write_idf(path, self.idd_structure)
 
 
 class TestIDFStructureValidation(unittest.TestCase):

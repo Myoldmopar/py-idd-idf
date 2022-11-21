@@ -177,7 +177,11 @@ class IDDProcessor:
 
             # if we are on Windows, we may end up with "\r", so move the read and peeked characters forward once
             if peeked_char == "\r":  # pragma no cover -- we don't unit test on Windows, so this won't be caught
-                just_read_char = self.read_one_char()
+                # in this case, we currently have like peeked_char='\r' and just_read_char='A'
+                # we need to keep the just_read_char as it is, but move peeked char forward
+                currently_just_read_char = just_read_char
+                self.read_one_char()  # go ahead and digest the \r
+                just_read_char = currently_just_read_char
                 peeked_char = self.peek_one_char()
                 if not peeked_char:
                     peeked_char = "\n"
@@ -223,7 +227,7 @@ class IDDProcessor:
                     # first update the previous group
                     if cur_group is not None:
                         self.idd.groups.append(cur_group)
-                    group_declaration = token_builder
+                    group_declaration = token_builder.strip()
                     group_flag_index = group_declaration.find(self.group_flag_string)
                     if group_flag_index == -1:  # pragma: no cover
                         # add error to error report
@@ -245,7 +249,7 @@ class IDDProcessor:
                 # for now I will assume that the single line objects can't have metadata
                 # so read until either a comma or semicolon, also trap for errors if we reach the end of line or comment
                 if peeked_char == ",":
-                    object_title = token_builder
+                    object_title = token_builder.strip()
                     cur_object = IDDObject(object_title)
                     token_builder = ""
                     self.read_one_char()  # to clear the comma
