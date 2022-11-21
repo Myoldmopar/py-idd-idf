@@ -1,7 +1,7 @@
 IDF Processor Module Documentation
 ==================================
 
-.. automodule:: pyiddidf.idf.processor
+.. automodule:: pyiddidf.idf_processor
    :members:
    :undoc-members:
    :show-inheritance:

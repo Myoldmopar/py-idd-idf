@@ -1,3 +1,6 @@
+from typing import List, Optional
+
+
 class IDDField:
     """
     A simple class that defines a single field for an IDD object.  Relevant members are listed here:
@@ -14,10 +17,10 @@ class IDDField:
     :param str an_index: The A_i or N_i descriptor for this field in the IDD, where i is an integer 1-...
     """
 
-    def __init__(self, an_index):
+    def __init__(self, an_index: str):
         self.field_an_index = an_index
         self.meta_data = {}
-        self.field_name = None
+        self.field_name: Optional[str] = None
 
     def __str__(self):
         return f"IDDField: {self.field_an_index} - {self.field_name}"
@@ -39,10 +42,10 @@ class IDDObject:
     :param str name: The object's type, or name
     """
 
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
         self.meta_data = {}
-        self.fields = []
+        self.fields: List[IDDField] = []
 
     def __str__(self):
         return f"IDDObject: {self.name} - {len(self.fields)} fields"
@@ -61,9 +64,9 @@ class IDDGroup:
     :param str name: The group's name
     """
 
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
-        self.objects = []
+        self.objects: List[IDDObject] = []
 
     def __str__(self):
         return f"IDDGroup: {self.name} - {len(self.objects)} objects"
@@ -89,13 +92,13 @@ class IDDStructure:
                           for bookkeeping purposes.
     """
 
-    def __init__(self, file_path):
+    def __init__(self, file_path: str):
         self.file_path = file_path
-        self.version_string = None
-        self.build_string = None
-        self.version_float = None
-        self.single_line_objects = []
-        self.groups = []
+        self.version_string: Optional[str] = None
+        self.build_string: Optional[str] = None
+        self.version_float: Optional[float] = None
+        self.single_line_objects: List[str] = []
+        self.groups: List[IDDGroup] = []
 
     def get_object_by_type(self, type_to_get):
         """

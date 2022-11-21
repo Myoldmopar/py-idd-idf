@@ -1,6 +1,7 @@
 from io import StringIO
 import logging
 import os
+from typing import Optional
 
 from pyiddidf import exceptions
 from pyiddidf.idd_objects import IDDField, IDDObject, IDDStructure, IDDGroup
@@ -43,7 +44,7 @@ class IDDProcessor:
     """
 
     def __init__(self):
-        self.idd = None
+        self.idd: Optional[IDDStructure] = None
         self.idd_file_stream = None
         self.file_path = None
         self.group_flag_string = "\\group"
