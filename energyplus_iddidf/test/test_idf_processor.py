@@ -3,9 +3,9 @@ import os
 import tempfile
 import unittest
 
-from pyiddidf.exceptions import ProcessingException
-from pyiddidf.idf_processor import IDFProcessor
-from pyiddidf.idd_processor import IDDProcessor
+from energyplus_iddidf.exceptions import ProcessingException
+from energyplus_iddidf.idf_processor import IDFProcessor
+from energyplus_iddidf.idd_processor import IDDProcessor
 
 
 class TestIDFProcessingViaStream(unittest.TestCase):

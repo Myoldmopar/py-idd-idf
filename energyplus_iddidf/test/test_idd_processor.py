@@ -2,9 +2,9 @@ from io import StringIO
 import os
 from unittest import TestCase, skipIf
 
-from pyiddidf import settings
-from pyiddidf.exceptions import ProcessingException
-from pyiddidf.idd_processor import IDDProcessor
+from energyplus_iddidf import settings
+from energyplus_iddidf.exceptions import ProcessingException
+from energyplus_iddidf.idd_processor import IDDProcessor
 
 
 class TestIDDProcessingViaStream(TestCase):

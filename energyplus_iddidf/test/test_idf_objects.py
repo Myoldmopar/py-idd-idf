@@ -2,9 +2,9 @@ from io import StringIO
 import tempfile
 import unittest
 
-from pyiddidf.idd_processor import IDDProcessor
-from pyiddidf.idf_objects import IDFObject, ValidationIssue
-from pyiddidf.idf_processor import IDFProcessor
+from energyplus_iddidf.idd_processor import IDDProcessor
+from energyplus_iddidf.idf_objects import IDFObject, ValidationIssue
+from energyplus_iddidf.idf_processor import IDFProcessor
 
 
 class TestIDFObject(unittest.TestCase):

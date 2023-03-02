@@ -23,7 +23,7 @@ Some example CLI calls:
 Get the CLI form:
 
 ```shell
-$ ./some_python_venv/bin/energyplus_idd_idf --help
+$ energyplus_idd_idf --help
 usage: energyplus_idd_idf [-h] [--idd_check] [--idd_obj_matches IDD_OBJ_MATCHES] [--summarize_idd_object SUMMARIZE_IDD_OBJECT] filename
 
 EnergyPlus IDD/IDF Utility Command Line
@@ -46,7 +46,7 @@ This CLI is in infancy and will probably have features added over time
 Check an existing IDD file and get basic information:
 
 ```shell
-$ ./some_python_venv/bin/energyplus_idd_idf --idd_check /path/to/EnergyPlus-22-2-0/Energy+.idd 
+$ energyplus_idd_idf --idd_check /path/to/EnergyPlus-22-2-0/Energy+.idd 
 {
   "message": "Everything looks OK",
   "content": {
@@ -62,7 +62,7 @@ $ ./some_python_venv/bin/energyplus_idd_idf --idd_check /path/to/EnergyPlus-22-2
 Find all objects which match a certain name pattern:
 
 ```shell
-$ ./some_python_venv/bin/energyplus_idd_idf --idd_obj_matches 'Coil:Cooling*' /path/to/EnergyPlus-22-2-0/Energy+.idd 
+$ energyplus_idd_idf --idd_obj_matches 'Coil:Cooling*' /path/to/EnergyPlus-22-2-0/Energy+.idd 
 {
   "message": "Everything looks OK",
   "content": {
@@ -94,7 +94,7 @@ $ ./some_python_venv/bin/energyplus_idd_idf --idd_obj_matches 'Coil:Cooling*' /p
 Get specific details about a single object by name:
 
 ```shell
-$ ./some_python_venv/bin/energyplus_idd_idf /path/to/EnergyPlus-22-2-0/Energy+.idd --summarize_idd_object "Coil:Cooling:DX"
+$ energyplus_idd_idf /path/to/EnergyPlus-22-2-0/Energy+.idd --summarize_idd_object "Coil:Cooling:DX"
 {
   "message": "Everything looks OK",
   "content": {
