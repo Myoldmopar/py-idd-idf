@@ -1,6 +1,6 @@
 import unittest
 
-from pyiddidf.exceptions import (
+from energyplus_iddidf.exceptions import (
     UnimplementedMethodException,
     ManagerProcessingException,
     FileAccessException as eFAE,
@@ -57,7 +57,7 @@ class TestFileTypeException(unittest.TestCase):
 
 class TestProcessingException(unittest.TestCase):
     def setUp(self):
-        self.e = ProcessingException("mymessage", line_index=1, object_name="heyyo", field_name="myfield")
+        self.e = ProcessingException("mymessage", line_index=1, object_name="heyyo")
 
     def test_type(self):
         self.assertTrue(isinstance(self.e, Exception))

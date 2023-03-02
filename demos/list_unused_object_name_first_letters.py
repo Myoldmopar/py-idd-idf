@@ -1,4 +1,4 @@
-from pyiddidf.idd_processor import IDDProcessor
+from energyplus_iddidf.idd_processor import IDDProcessor
 
 file_path = '/home/edwin/Projects/energyplus/repos/4eplus/idd/V8-9-0-Energy+.idd'
 

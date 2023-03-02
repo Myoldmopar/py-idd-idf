@@ -2,8 +2,8 @@ from io import StringIO
 import logging
 import os
 
-from pyiddidf import exceptions
-from pyiddidf.idf_objects import IDFObject, IDFStructure
+from energyplus_iddidf import exceptions
+from energyplus_iddidf.idf_objects import IDFObject, IDFStructure
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 

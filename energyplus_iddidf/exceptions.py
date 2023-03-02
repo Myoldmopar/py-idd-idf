@@ -94,7 +94,7 @@ class ProcessingException(Exception):
     This exception occurs when an unexpected error occurs during the processing of an input file.
     """
 
-    def __init__(self, message, line_index=None, object_name="", field_name=""):
+    def __init__(self, message, line_index=None, object_name=""):
         super(ProcessingException, self).__init__(message)
         self.message = message
         self.line_index = line_index

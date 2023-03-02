@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from pyiddidf.idd_objects import IDDGroup, IDDObject, IDDField
+from energyplus_iddidf.idd_objects import IDDGroup, IDDObject, IDDField
 
 
 class TestIDDObjectRepresentations(TestCase):

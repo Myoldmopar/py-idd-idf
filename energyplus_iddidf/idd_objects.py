@@ -75,7 +75,7 @@ class IDDGroup:
 class IDDStructure:
     """
     An IDD structure representation.  This includes containing all the IDD objects (either inside groups or as
-    standalone "single line objects"), as well as meta data such as the version ID for
+    standalone "single line objects"), as well as metadata such as the version ID for
     this IDD, and finally providing worker functions for accessing the IDD data
 
     Relevant "public" members are listed here:

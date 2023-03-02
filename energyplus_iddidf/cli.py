@@ -6,9 +6,9 @@ from pathlib import Path
 from sys import exit
 from typing import Optional
 
-from pyiddidf.exceptions import ProcessingException
-from pyiddidf.idd_objects import IDDObject
-from pyiddidf.idd_processor import IDDProcessor
+from energyplus_iddidf.exceptions import ProcessingException
+from energyplus_iddidf.idd_objects import IDDObject
+from energyplus_iddidf.idd_processor import IDDProcessor
 
 
 class Actions:
@@ -52,7 +52,7 @@ def main_cli() -> int:
     if not p.exists():
         print(dumps({'message': "Supplied file does not appear to exist, check paths and retry!"}, indent=2))
         return ExitCodes.BadArguments
-    # for now assume it's always the IDD so we don't have to repeat this code
+    # for now assume it's always the IDD, so we don't have to repeat this code
     processor = IDDProcessor()
     try:
         processor.process_file_given_file_path(str(p))

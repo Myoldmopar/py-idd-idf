@@ -3,8 +3,8 @@ import logging
 import os
 from typing import Optional
 
-from pyiddidf import exceptions
-from pyiddidf.idd_objects import IDDField, IDDObject, IDDStructure, IDDGroup
+from energyplus_iddidf import exceptions
+from energyplus_iddidf.idd_objects import IDDField, IDDObject, IDDStructure, IDDGroup
 
 module_logger = logging.getLogger("eptransition.idd.processor")
 
@@ -394,7 +394,7 @@ class IDDProcessor:
                                     "Invalid meta data, expected a space after the meta data specifier before the data",
                                     line_index=line_index,
                                     object_name=cur_object.name,
-                                    field_name=cur_field.field_name
+                                    # field_name=cur_field.field_name
                                 )
                         data = data.strip()
                         if flag_found == "\\field":
@@ -412,7 +412,8 @@ class IDDProcessor:
                             "Erroneous field meta data entry found",
                             line_index=line_index,
                             object_name=cur_object.name,
-                            field_name=cur_field.field_name)
+                            # field_name=cur_field.field_name
+                        )
                     token_builder = ""
                     if last_field_for_object:
                         read_status = CurrentReadType.LookingForFieldMetaDataOrNextObject

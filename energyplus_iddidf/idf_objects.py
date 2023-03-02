@@ -51,7 +51,7 @@ class ValidationIssue:
 class IDFObject(object):
     """
     This class defines a single IDF object.  An IDF object is either a comma/semicolon delimited list of actual
-    object data, or a block of line delimited comments.  Blocks of comment lines are treated as IDF objects so they can
+    object data, or a block of line delimited comments.  Blocks of comment lines are treated as IDF objects, so they can
     be intelligently written back out to a new IDF file after transition in the same location.
 
     Relevant members are listed here:
@@ -201,15 +201,15 @@ class IDFObject(object):
                                 if number <= min_val:
                                     issues.append(ValidationIssue(
                                         idd_object.name, ValidationIssue.WARNING,
-                                        "Field value lower than idd-specified minimum<; actual={}, max={}".format(
-                                            number, max_val), idd.field_name))
+                                        "Field value lower than idd-specified minimum<; actual={}, min={}".format(
+                                            number, min_val), idd.field_name))
                             else:
                                 min_val = float(min_constraint_string)
                                 if number < min_val:
                                     issues.append(ValidationIssue(
                                         idd_object.name, ValidationIssue.WARNING,
-                                        "Field value lower than idd-specified minimum; actual={}, max={}".format(
-                                            number, max_val), idd.field_name))
+                                        "Field value lower than idd-specified minimum; actual={}, min={}".format(
+                                            number, min_val), idd.field_name))
                     except ValueError:
                         if "\\autosizable" in idd.meta_data and idf.upper() == "AUTOSIZE":
                             pass  # everything is ok
@@ -243,7 +243,7 @@ class IDFObject(object):
 
 class IDFStructure(object):
     """
-    An IDF structure representation.  This includes containing all the IDF objects in the file, as well as meta data
+    An IDF structure representation.  This includes containing all the IDF objects in the file, as well as metadata
     such as the version ID for this IDD, and finally providing worker functions for accessing the IDD data
 
     Relevant "public" members are listed here:
